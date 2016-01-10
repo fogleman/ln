@@ -14,16 +14,18 @@ func cube(x, y, z float64) ln.Shape {
 
 func main() {
 	scene := ln.Scene{}
-	n := 10
+	n := 20
 	for x := -n; x <= n; x++ {
 		for y := -n; y <= n; y++ {
-			z := rand.Intn(4) + 1
+			z := rand.Float64() * 3
 			scene.Add(cube(float64(x), float64(y), float64(z)))
+			scene.Add(cube(float64(x), float64(y), float64(z+1)))
+			scene.Add(cube(float64(x), float64(y), float64(z+2)))
 		}
 	}
-	eye := ln.Vector{20, 50, 20}
+	eye := ln.Vector{30, 50, 20}
 	center := ln.Vector{}
 	up := ln.Vector{0, 0, 1}
 	paths := scene.Render(eye, center, up, 50, 1, 0.1, 100, 0.01)
-	paths.Render("out.png", 2000)
+	paths.Render("out.png", 1000)
 }
