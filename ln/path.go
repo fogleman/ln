@@ -20,16 +20,6 @@ func (p Path) Transform(matrix Matrix) Path {
 	return result
 }
 
-func (p Path) TransformW(matrix Matrix) Path {
-	var result Path
-	for _, v := range p {
-		v, w := matrix.MulPositionW(v)
-		v = v.DivScalar(w)
-		result = append(result, v)
-	}
-	return result
-}
-
 func (p Path) Chop(step float64) Path {
 	var result Path
 	for i := 0; i < len(p)-1; i++ {
@@ -50,11 +40,16 @@ func (p Path) Chop(step float64) Path {
 	return result
 }
 
-func (p Path) Clip(eye Vector, scene *Scene) Paths {
+func (p Path) Clip(matrix Matrix, eye Vector, scene *Scene) Paths {
+	box := Box{Vector{-1, -1, -1}, Vector{1, 1, 1}}
 	var result Paths
 	var path Path
 	for _, v := range p {
 		visible := scene.Visible(eye, v)
+		if visible {
+			v = matrix.MulPositionW(v)
+			visible = box.Contains(v)
+		}
 		if visible {
 			path = append(path, v)
 		} else {
@@ -88,14 +83,6 @@ func (p Paths) Transform(matrix Matrix) Paths {
 	return result
 }
 
-func (p Paths) TransformW(matrix Matrix) Paths {
-	var result Paths
-	for _, path := range p {
-		result = append(result, path.TransformW(matrix))
-	}
-	return result
-}
-
 func (p Paths) Chop(step float64) Paths {
 	var result Paths
 	for _, path := range p {
@@ -104,10 +91,10 @@ func (p Paths) Chop(step float64) Paths {
 	return result
 }
 
-func (p Paths) Clip(eye Vector, scene *Scene) Paths {
+func (p Paths) Clip(matrix Matrix, eye Vector, scene *Scene) Paths {
 	var result Paths
 	for _, path := range p {
-		result = append(result, path.Clip(eye, scene)...)
+		result = append(result, path.Clip(matrix, eye, scene)...)
 	}
 	return result
 }
@@ -120,6 +107,9 @@ func (p Paths) Render(path string, scale float64) {
 	width := int(dx*scale + pad*2)
 	height := int(dy*scale + pad*2)
 	dc := cairo.NewSurface(cairo.FORMAT_ARGB32, width, height)
+	dc.SetLineCap(cairo.LINE_CAP_ROUND)
+	dc.SetLineJoin(cairo.LINE_JOIN_ROUND)
+	dc.SetLineWidth(3)
 	dc.Scale(1, -1)
 	dc.Translate(0, float64(-height))
 	dc.SetSourceRGB(1, 1, 1)

@@ -40,15 +40,14 @@ func (s *Scene) Paths() Paths {
 }
 
 func (s *Scene) Render(eye, center, up Vector, fovy, aspect, near, far, step float64) Paths {
+	s.Compile()
 	paths := s.Paths()
-	if step > 0 {
-		s.Compile()
-		paths = paths.Chop(step)
-		paths = paths.Clip(eye, s)
-	}
 	matrix := LookAt(eye, center, up)
 	matrix = matrix.Perspective(fovy, aspect, near, far)
-	paths = paths.TransformW(matrix)
+	if step > 0 {
+		paths = paths.Chop(step)
+	}
+	paths = paths.Clip(matrix, eye, s)
 	paths = append(paths, Path{{-1, -1, 0}, {1, -1, 0}, {1, 1, 0}, {-1, 1, 0}, {-1, -1, 0}})
 	return paths
 }

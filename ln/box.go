@@ -40,6 +40,12 @@ func (a Box) Size() Vector {
 	return a.Max.Sub(a.Min)
 }
 
+func (a Box) Contains(b Vector) bool {
+	return a.Min.X <= b.X && a.Max.X >= b.X &&
+		a.Min.Y <= b.Y && a.Max.Y >= b.Y &&
+		a.Min.Z <= b.Z && a.Max.Z >= b.Z
+}
+
 func (a Box) Extend(b Box) Box {
 	return Box{a.Min.Min(b.Min), a.Max.Max(b.Max)}
 }

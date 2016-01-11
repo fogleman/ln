@@ -137,12 +137,12 @@ func (a Matrix) MulPosition(b Vector) Vector {
 	return Vector{x, y, z}
 }
 
-func (a Matrix) MulPositionW(b Vector) (Vector, float64) {
+func (a Matrix) MulPositionW(b Vector) Vector {
 	x := a.x00*b.X + a.x01*b.Y + a.x02*b.Z + a.x03
 	y := a.x10*b.X + a.x11*b.Y + a.x12*b.Z + a.x13
 	z := a.x20*b.X + a.x21*b.Y + a.x22*b.Z + a.x23
 	w := a.x30*b.X + a.x31*b.Y + a.x32*b.Z + a.x33
-	return Vector{x, y, z}, w
+	return Vector{x / w, y / w, z / w}
 }
 
 func (a Matrix) MulDirection(b Vector) Vector {
