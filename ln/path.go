@@ -15,6 +15,14 @@ func (p Path) BoundingBox() Box {
 func (p Path) Transform(matrix Matrix) Path {
 	var result Path
 	for _, v := range p {
+		result = append(result, matrix.MulPosition(v))
+	}
+	return result
+}
+
+func (p Path) TransformW(matrix Matrix) Path {
+	var result Path
+	for _, v := range p {
 		v, w := matrix.MulPositionW(v)
 		v = v.DivScalar(w)
 		result = append(result, v)
@@ -76,6 +84,14 @@ func (p Paths) Transform(matrix Matrix) Paths {
 	var result Paths
 	for _, path := range p {
 		result = append(result, path.Transform(matrix))
+	}
+	return result
+}
+
+func (p Paths) TransformW(matrix Matrix) Paths {
+	var result Paths
+	for _, path := range p {
+		result = append(result, path.TransformW(matrix))
 	}
 	return result
 }

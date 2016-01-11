@@ -22,12 +22,9 @@ func (s *TransformedShape) BoundingBox() Box {
 }
 
 func (s *TransformedShape) Intersect(r Ray) Hit {
-	hit := s.Shape.Intersect(s.Inverse.MulRay(r))
-	if !hit.Ok() {
-		return hit
-	}
-	// if s.Shape is a Mesh, the hit.Shape will be a Triangle in the Mesh
-	// we need to transform this Triangle, not the Mesh itself
-	shape := &TransformedShape{hit.Shape, s.Matrix, s.Inverse}
-	return Hit{shape, hit.T}
+	return s.Shape.Intersect(s.Inverse.MulRay(r))
+}
+
+func (s *TransformedShape) Paths() Paths {
+	return s.Shape.Paths().Transform(s.Matrix)
 }

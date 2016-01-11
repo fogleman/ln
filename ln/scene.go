@@ -22,10 +22,19 @@ func (s *Scene) Intersect(r Ray) Hit {
 	return s.Tree.Intersect(r)
 }
 
+func (s *Scene) Visible(eye, point Vector) bool {
+	v := eye.Sub(point)
+	r := Ray{point, v.Normalize()}
+	hit := s.Intersect(r)
+	return hit.T >= v.Length()
+}
+
 func (s *Scene) Paths() Paths {
 	var result Paths
 	for _, shape := range s.Shapes {
 		result = append(result, shape.Paths()...)
+		// box := shape.BoundingBox()
+		// result = append(result, NewCube(box.Min, box.Max).Paths()...)
 	}
 	return result
 }
@@ -39,13 +48,7 @@ func (s *Scene) Render(eye, center, up Vector, fovy, aspect, near, far, step flo
 	}
 	matrix := LookAt(eye, center, up)
 	matrix = matrix.Perspective(fovy, aspect, near, far)
-	paths = paths.Transform(matrix)
+	paths = paths.TransformW(matrix)
+	paths = append(paths, Path{{-1, -1, 0}, {1, -1, 0}, {1, 1, 0}, {-1, 1, 0}, {-1, -1, 0}})
 	return paths
-}
-
-func (s *Scene) Visible(eye, point Vector) bool {
-	v := eye.Sub(point)
-	r := Ray{point, v.Normalize()}
-	hit := s.Intersect(r)
-	return hit.T >= v.Length()
 }
