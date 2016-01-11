@@ -1,10 +1,6 @@
 package main
 
-import (
-	"math/rand"
-
-	"github.com/fogleman/ln/ln"
-)
+import "github.com/fogleman/ln/ln"
 
 func cube(x, y, z float64) ln.Shape {
 	a := ln.Vector{x - 0.5, y - 0.5, z - 0.5}
@@ -17,14 +13,22 @@ func main() {
 	n := 20
 	for x := -n; x <= n; x++ {
 		for y := -n; y <= n; y++ {
-			z := rand.Float64() * 3
-			scene.Add(cube(float64(x), float64(y), float64(z)))
-			scene.Add(cube(float64(x), float64(y), float64(z+1)))
-			scene.Add(cube(float64(x), float64(y), float64(z+2)))
+			// z := rand.Float64() * 3
+			// scene.Add(cube(float64(x), float64(y), float64(z)))
+			// scene.Add(cube(float64(x), float64(y), float64(z+1)))
+			// scene.Add(cube(float64(x), float64(y), float64(z+2)))
 		}
 	}
-	scene.Add(ln.NewSphere(ln.Vector{0, 0, 2}, 10))
-	eye := ln.Vector{30, 50, 20}
+	n = 8
+	for x := -n; x <= n; x++ {
+		for y := -n; y <= n; y++ {
+			scene.Add(ln.NewSphere(ln.Vector{float64(x), float64(y), 0}, 0.45))
+		}
+	}
+	// scene.Add(ln.NewSphere(ln.Vector{0, 4, 0}, 4))
+	// scene.Add(ln.NewSphere(ln.Vector{-7, 0, 0}, 4))
+	// scene.Add(ln.NewSphere(ln.Vector{7, 0, 0}, 4))
+	eye := ln.Vector{8, 8, 2}
 	center := ln.Vector{}
 	up := ln.Vector{0, 0, 1}
 	paths := scene.Render(eye, center, up, 50, 1, 0.1, 100, 0.01)

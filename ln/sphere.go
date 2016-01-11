@@ -1,6 +1,9 @@
 package ln
 
-import "math"
+import (
+	"math"
+	"math/rand"
+)
 
 type Sphere struct {
 	Center Vector
@@ -40,6 +43,37 @@ func (s *Sphere) Intersect(r Ray) Hit {
 		}
 	}
 	return NoHit
+}
+
+func (s *Sphere) Paths3() Paths {
+	var paths Paths
+	for i := 0; i < 20000; i++ {
+		a := RandomUnitVector()
+		b := a.Add(RandomUnitVector().MulScalar(0.001)).Normalize()
+		a = a.MulScalar(s.Radius).Add(s.Center)
+		b = b.MulScalar(s.Radius).Add(s.Center)
+		paths = append(paths, Path{a, b})
+	}
+	return paths
+}
+
+func (s *Sphere) Paths2() Paths {
+	var equator Path
+	for lng := 0; lng <= 360; lng++ {
+		v := LatLngToXYZ(0, float64(lng), s.Radius)
+		equator = append(equator, v)
+	}
+	var paths Paths
+	for i := 0; i < 100; i++ {
+		m := Identity()
+		for j := 0; j < 3; j++ {
+			v := RandomUnitVector()
+			m = m.Rotate(v, rand.Float64()*2*math.Pi)
+		}
+		m = m.Translate(s.Center)
+		paths = append(paths, equator.Transform(m))
+	}
+	return paths
 }
 
 func (s *Sphere) Paths() Paths {
