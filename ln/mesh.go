@@ -30,7 +30,11 @@ func (m *Mesh) Intersect(r Ray) Hit {
 }
 
 func (m *Mesh) Paths() Paths {
-	return nil
+	var result Paths
+	for _, t := range m.Triangles {
+		result = append(result, t.Paths()...)
+	}
+	return result
 }
 
 func (m *Mesh) UpdateBoundingBox() {

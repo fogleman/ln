@@ -23,6 +23,7 @@ func main() {
 			scene.Add(cube(float64(x), float64(y), float64(z+2)))
 		}
 	}
+	scene.Add(ln.NewSphere(ln.Vector{0, 0, 2}, 10))
 	eye := ln.Vector{30, 50, 20}
 	center := ln.Vector{}
 	up := ln.Vector{0, 0, 1}

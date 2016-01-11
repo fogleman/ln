@@ -58,7 +58,11 @@ func (t *Triangle) Intersect(r Ray) Hit {
 }
 
 func (t *Triangle) Paths() Paths {
-	return nil
+	return Paths{
+		{t.V1, t.V2},
+		{t.V2, t.V3},
+		{t.V3, t.V1},
+	}
 }
 
 func (t *Triangle) UpdateBoundingBox() {
