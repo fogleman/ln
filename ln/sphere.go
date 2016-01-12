@@ -125,7 +125,7 @@ func (s *Sphere) Paths2() Paths {
 
 func (s *Sphere) Paths() Paths {
 	var paths Paths
-	n := 10
+	n := 5
 	for lat := -90 + n; lat <= 90-n; lat += n {
 		var path Path
 		for lng := 0; lng <= 360; lng++ {
