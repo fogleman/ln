@@ -21,7 +21,16 @@ func (c *Cube) BoundingBox() Box {
 }
 
 func (c *Cube) Contains(v Vector, f float64) bool {
-	return false
+	if v.X < c.Min.X-f || v.X > c.Max.X+f {
+		return false
+	}
+	if v.Y < c.Min.Y-f || v.Y > c.Max.Y+f {
+		return false
+	}
+	if v.Z < c.Min.Z-f || v.Z > c.Max.Z+f {
+		return false
+	}
+	return true
 }
 
 func (c *Cube) Intersect(r Ray) Hit {
@@ -31,7 +40,7 @@ func (c *Cube) Intersect(r Ray) Hit {
 	t0 := math.Max(math.Max(n.X, n.Y), n.Z)
 	t1 := math.Min(math.Min(f.X, f.Y), f.Z)
 	if t0 < 0 && t1 > 0 {
-		return Hit{c, 0}
+		return Hit{c, t1}
 	}
 	if t0 >= 0 && t0 < t1 {
 		return Hit{c, t0}

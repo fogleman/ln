@@ -61,7 +61,7 @@ func (s *BooleanShape) Intersect(r Ray) Hit {
 	if !h.Ok() || s.Contains(v, 0) {
 		return h
 	}
-	return s.Intersect(Ray{r.Position(h.T + 1e-4), r.Direction})
+	return s.Intersect(Ray{r.Position(h.T + 0.01), r.Direction})
 }
 
 func (s *BooleanShape) Paths() Paths {
