@@ -43,7 +43,7 @@ func (s *BooleanShape) BoundingBox() Box {
 }
 
 func (s *BooleanShape) Contains(v Vector, f float64) bool {
-	f = 1e-4
+	f = 1e-3
 	switch s.Op {
 	case Intersection:
 		return s.A.Contains(v, f) && s.B.Contains(v, f)

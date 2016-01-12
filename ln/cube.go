@@ -39,10 +39,10 @@ func (c *Cube) Intersect(r Ray) Hit {
 	n, f = n.Min(f), n.Max(f)
 	t0 := math.Max(math.Max(n.X, n.Y), n.Z)
 	t1 := math.Min(math.Min(f.X, f.Y), f.Z)
-	if t0 < 0 && t1 > 0 {
+	if t0 < 1e-3 && t1 > 1e-3 {
 		return Hit{c, t1}
 	}
-	if t0 >= 0 && t0 < t1 {
+	if t0 >= 1e-3 && t0 < t1 {
 		return Hit{c, t0}
 	}
 	return NoHit

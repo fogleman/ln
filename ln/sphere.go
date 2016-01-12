@@ -30,7 +30,7 @@ func (s *Sphere) Contains(v Vector, f float64) bool {
 }
 
 func (s *Sphere) Intersect(r Ray) Hit {
-	radius := s.Radius - 0.001
+	radius := s.Radius
 	to := r.Origin.Sub(s.Center)
 	b := to.Dot(r.Direction)
 	c := to.Dot(to) - radius*radius
@@ -38,11 +38,11 @@ func (s *Sphere) Intersect(r Ray) Hit {
 	if d > 0 {
 		d = math.Sqrt(d)
 		t1 := -b - d
-		if t1 > 0 {
+		if t1 > 1e-3 {
 			return Hit{s, t1}
 		}
 		t2 := -b + d
-		if t2 > 0 {
+		if t2 > 1e-3 {
 			return Hit{s, t2}
 		}
 	}
@@ -125,8 +125,9 @@ func (s *Sphere) Paths2() Paths {
 
 func (s *Sphere) Paths() Paths {
 	var paths Paths
-	n := 15
-	for lat := -90 + n; lat <= 90-n; lat += n {
+	n := 10
+	o := 10
+	for lat := -90 + o; lat <= 90-o; lat += n {
 		var path Path
 		for lng := 0; lng <= 360; lng++ {
 			v := LatLngToXYZ(float64(lat), float64(lng), s.Radius).Add(s.Center)
@@ -136,7 +137,7 @@ func (s *Sphere) Paths() Paths {
 	}
 	for lng := 0; lng <= 360; lng += n {
 		var path Path
-		for lat := -90 + n; lat <= 90-n; lat++ {
+		for lat := -90 + o; lat <= 90-o; lat++ {
 			v := LatLngToXYZ(float64(lat), float64(lng), s.Radius).Add(s.Center)
 			path = append(path, v)
 		}
