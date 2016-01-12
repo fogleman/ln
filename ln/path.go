@@ -100,7 +100,7 @@ func (p Paths) Clip(matrix Matrix, eye Vector, scene *Scene) Paths {
 }
 
 func (p Paths) Render(path string, scale float64) {
-	pad := 10.0
+	pad := 0.0
 	box := p.BoundingBox()
 	dx := box.Max.X - box.Min.X
 	dy := box.Max.Y - box.Min.Y

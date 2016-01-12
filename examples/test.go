@@ -28,9 +28,9 @@ func main() {
 	// scene.Add(ln.NewSphere(ln.Vector{0, 4, 0}, 4))
 	// scene.Add(ln.NewSphere(ln.Vector{-7, 0, 0}, 4))
 	// scene.Add(ln.NewSphere(ln.Vector{7, 0, 0}, 4))
-	eye := ln.Vector{8, 8, 2}
-	center := ln.Vector{}
+	eye := ln.Vector{8, 8, 1}
+	center := ln.Vector{0, 0, -4.25}
 	up := ln.Vector{0, 0, 1}
 	paths := scene.Render(eye, center, up, 50, 1, 0.1, 100, 0.01)
-	paths.Render("out.png", 1000)
+	paths.Render("out.png", 1024)
 }

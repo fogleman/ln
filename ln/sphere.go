@@ -45,14 +45,57 @@ func (s *Sphere) Intersect(r Ray) Hit {
 	return NoHit
 }
 
+func (s *Sphere) Paths() Paths {
+	var paths Paths
+	var seen []Vector
+	var radii []float64
+	for i := 0; i < 140; i++ {
+		var v Vector
+		var m float64
+		for {
+			v = RandomUnitVector()
+			m = rand.Float64()*0.25 + 0.05
+			ok := true
+			for i, other := range seen {
+				threshold := m + radii[i] + 0.02
+				if other.Sub(v).Length() < threshold {
+					ok = false
+					break
+				}
+			}
+			if ok {
+				seen = append(seen, v)
+				radii = append(radii, m)
+				break
+			}
+		}
+		p := v.Cross(RandomUnitVector()).Normalize()
+		q := p.Cross(v).Normalize()
+		n := rand.Intn(4) + 1
+		for k := 0; k < n; k++ {
+			var path Path
+			for j := 0; j <= 360; j += 5 {
+				a := Radians(float64(j))
+				x := v
+				x = x.Add(p.MulScalar(math.Cos(a) * m))
+				x = x.Add(q.MulScalar(math.Sin(a) * m))
+				x = x.Normalize()
+				x = x.MulScalar(s.Radius).Add(s.Center)
+				path = append(path, x)
+			}
+			paths = append(paths, path)
+			m *= 0.75
+		}
+	}
+	return paths
+}
+
 func (s *Sphere) Paths3() Paths {
 	var paths Paths
 	for i := 0; i < 20000; i++ {
-		a := RandomUnitVector()
-		b := a.Add(RandomUnitVector().MulScalar(0.001)).Normalize()
-		a = a.MulScalar(s.Radius).Add(s.Center)
-		b = b.MulScalar(s.Radius).Add(s.Center)
-		paths = append(paths, Path{a, b})
+		v := RandomUnitVector()
+		v = v.MulScalar(s.Radius).Add(s.Center)
+		paths = append(paths, Path{v, v})
 	}
 	return paths
 }
@@ -76,7 +119,7 @@ func (s *Sphere) Paths2() Paths {
 	return paths
 }
 
-func (s *Sphere) Paths() Paths {
+func (s *Sphere) Paths1() Paths {
 	var paths Paths
 	n := 10
 	for lat := -90 + n; lat <= 90-n; lat += n {
