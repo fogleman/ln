@@ -20,7 +20,7 @@ func (c *Cube) BoundingBox() Box {
 	return c.Box
 }
 
-func (c *Cube) Contains(v Vector) bool {
+func (c *Cube) Contains(v Vector, f float64) bool {
 	return false
 }
 

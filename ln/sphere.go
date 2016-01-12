@@ -25,8 +25,8 @@ func (s *Sphere) BoundingBox() Box {
 	return s.Box
 }
 
-func (s *Sphere) Contains(v Vector) bool {
-	return v.Sub(s.Center).Length() <= s.Radius+0.001
+func (s *Sphere) Contains(v Vector, f float64) bool {
+	return v.Sub(s.Center).Length() <= s.Radius+f
 }
 
 func (s *Sphere) Intersect(r Ray) Hit {

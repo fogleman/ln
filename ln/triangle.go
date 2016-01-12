@@ -21,7 +21,7 @@ func (t *Triangle) BoundingBox() Box {
 	return t.Box
 }
 
-func (t *Triangle) Contains(v Vector) bool {
+func (t *Triangle) Contains(v Vector, f float64) bool {
 	return false
 }
 
