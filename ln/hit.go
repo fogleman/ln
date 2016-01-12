@@ -7,6 +7,20 @@ type Hit struct {
 
 var NoHit = Hit{nil, INF}
 
-func (hit *Hit) Ok() bool {
+func (hit Hit) Ok() bool {
 	return hit.T < INF
+}
+
+func (a Hit) Min(b Hit) Hit {
+	if a.T <= b.T {
+		return a
+	}
+	return b
+}
+
+func (a Hit) Max(b Hit) Hit {
+	if a.T > b.T {
+		return a
+	}
+	return b
 }

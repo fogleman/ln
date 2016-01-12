@@ -21,6 +21,10 @@ func (t *Triangle) BoundingBox() Box {
 	return t.Box
 }
 
+func (t *Triangle) Contains(v Vector) bool {
+	return false
+}
+
 func (t *Triangle) Intersect(r Ray) Hit {
 	e1x := t.V2.X - t.V1.X
 	e1y := t.V2.Y - t.V1.Y

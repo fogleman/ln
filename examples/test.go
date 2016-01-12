@@ -33,5 +33,5 @@ func main() {
 	up := ln.Vector{0, 0, 1}
 	paths := scene.Render(eye, center, up, 50, 1, 0.1, 100, 0.01)
 	paths.Render("out.png", 1024)
-	paths.Print()
+	// paths.Print()
 }

@@ -47,7 +47,7 @@ func (s *Scene) Render(eye, center, up Vector, fovy, aspect, near, far, step flo
 	if step > 0 {
 		paths = paths.Chop(step)
 	}
-	paths = paths.Clip(matrix, eye, s)
+	paths = paths.Filter(&ClipFilter{matrix, eye, s})
 	paths = append(paths, Path{{-1, -1, 0}, {1, -1, 0}, {1, 1, 0}, {-1, 1, 0}, {-1, -1, 0}})
 	return paths
 }

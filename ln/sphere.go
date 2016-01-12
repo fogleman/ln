@@ -25,6 +25,10 @@ func (s *Sphere) BoundingBox() Box {
 	return s.Box
 }
 
+func (s *Sphere) Contains(v Vector) bool {
+	return v.Sub(s.Center).Length() <= s.Radius+0.001
+}
+
 func (s *Sphere) Intersect(r Ray) Hit {
 	radius := s.Radius - 0.001
 	to := r.Origin.Sub(s.Center)
@@ -45,7 +49,7 @@ func (s *Sphere) Intersect(r Ray) Hit {
 	return NoHit
 }
 
-func (s *Sphere) Paths() Paths {
+func (s *Sphere) Paths4() Paths {
 	var paths Paths
 	var seen []Vector
 	var radii []float64
@@ -119,7 +123,7 @@ func (s *Sphere) Paths2() Paths {
 	return paths
 }
 
-func (s *Sphere) Paths1() Paths {
+func (s *Sphere) Paths() Paths {
 	var paths Paths
 	n := 10
 	for lat := -90 + n; lat <= 90-n; lat += n {

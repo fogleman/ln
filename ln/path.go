@@ -44,17 +44,12 @@ func (p Path) Chop(step float64) Path {
 	return result
 }
 
-func (p Path) Clip(matrix Matrix, eye Vector, scene *Scene) Paths {
-	box := Box{Vector{-1, -1, -1}, Vector{1, 1, 1}}
+func (p Path) Filter(f Filter) Paths {
 	var result Paths
 	var path Path
 	for _, v := range p {
-		visible := scene.Visible(eye, v)
-		if visible {
-			v = matrix.MulPositionW(v)
-			visible = box.Contains(v)
-		}
-		if visible {
+		v, ok := f.Filter(v)
+		if ok {
 			path = append(path, v)
 		} else {
 			if len(path) > 0 {
@@ -102,10 +97,10 @@ func (p Paths) Chop(step float64) Paths {
 	return result
 }
 
-func (p Paths) Clip(matrix Matrix, eye Vector, scene *Scene) Paths {
+func (p Paths) Filter(f Filter) Paths {
 	var result Paths
 	for _, path := range p {
-		result = append(result, path.Clip(matrix, eye, scene)...)
+		result = append(result, path.Filter(f)...)
 	}
 	return result
 }
