@@ -7,19 +7,13 @@ import (
 )
 
 func main() {
-	a := ln.NewIntersection(
-		ln.NewSphere(ln.Vector{-1, 0, 0}, 2),
-		ln.NewSphere(ln.Vector{1, 0, 0}, 2),
-	)
 	shape := ln.NewDifference(
-		a,
-		ln.NewSphere(ln.Vector{}, 1.5),
-		// ln.NewCube(ln.Vector{-1, -1, -1}, ln.Vector{1, 1, 1}),
-		// // ln.NewSphere(ln.Vector{}, 1),
-		// ln.NewSphere(ln.Vector{-1, -1, -1}, 0.5),
-		// ln.NewSphere(ln.Vector{1, 1, 1}, 1.5),
-		// ln.NewSphere(ln.Vector{-1, 0, 0}, 0.5),
-		// ln.NewSphere(ln.Vector{0, -1, 0}, 0.5),
+		ln.NewCube(ln.Vector{-1, -1, -1}, ln.Vector{1, 1, 1}),
+		// ln.NewSphere(ln.Vector{}, 1),
+		ln.NewSphere(ln.Vector{-1, -1, -1}, 0.5),
+		ln.NewSphere(ln.Vector{1, 1, 1}, 1.5),
+		ln.NewSphere(ln.Vector{-1, 0, 0}, 0.5),
+		ln.NewSphere(ln.Vector{0, -1, 0}, 0.5),
 	)
 	for i := 0; i < 360; i += 2 {
 		fmt.Println(i)
