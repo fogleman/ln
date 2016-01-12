@@ -1,6 +1,10 @@
 package ln
 
-import "github.com/ungerik/go-cairo"
+import (
+	"fmt"
+
+	"github.com/ungerik/go-cairo"
+)
 
 type Path []Vector
 
@@ -65,6 +69,13 @@ func (p Path) Clip(matrix Matrix, eye Vector, scene *Scene) Paths {
 	return result
 }
 
+func (p Path) Print() {
+	for _, v := range p {
+		fmt.Printf("%g,%g;", v.X, v.Y)
+	}
+	fmt.Println()
+}
+
 type Paths []Path
 
 func (p Paths) BoundingBox() Box {
@@ -97,6 +108,12 @@ func (p Paths) Clip(matrix Matrix, eye Vector, scene *Scene) Paths {
 		result = append(result, path.Clip(matrix, eye, scene)...)
 	}
 	return result
+}
+
+func (p Paths) Print() {
+	for _, path := range p {
+		path.Print()
+	}
 }
 
 func (p Paths) Render(path string, scale float64) {

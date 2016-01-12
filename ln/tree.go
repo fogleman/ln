@@ -1,7 +1,6 @@
 package ln
 
 import (
-	"fmt"
 	"math"
 	"sort"
 )
@@ -12,8 +11,6 @@ type Tree struct {
 }
 
 func NewTree(shapes []Shape) *Tree {
-	fmt.Printf("Building k-d tree (%d shapes)... ", len(shapes))
-	defer fmt.Println("OK")
 	box := BoxForShapes(shapes)
 	node := NewNode(shapes)
 	node.Split(0)
