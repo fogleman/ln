@@ -25,6 +25,10 @@ func (m *Mesh) BoundingBox() Box {
 	return m.Box
 }
 
+func (m *Mesh) Contains(v Vector, f float64) bool {
+	return false
+}
+
 func (m *Mesh) Intersect(r Ray) Hit {
 	return m.Tree.Intersect(r)
 }
