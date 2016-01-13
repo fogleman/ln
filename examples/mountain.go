@@ -9,12 +9,6 @@ import (
 	"github.com/fogleman/ln/ln"
 )
 
-func cube(x, y, z float64) ln.Shape {
-	a := ln.Vector{x - 0.5, y - 0.5, z - 0.5}
-	b := ln.Vector{x + 0.5, y + 0.5, z + 0.5}
-	return ln.NewCube(a, b)
-}
-
 func load(path string) []ln.Vector {
 	var result []ln.Vector
 	file, err := os.Open(path)
