@@ -41,10 +41,10 @@ func main() {
 	for _, v := range blocks {
 		scene.Add(ln.NewCube(v.Sub(size), v.Add(size)))
 	}
-	eye := ln.Vector{90, 90, 90}
-	center := ln.Vector{0, 0, -10}
+	eye := ln.Vector{90, -90, 70}
+	center := ln.Vector{0, 0, -15}
 	up := ln.Vector{0, 0, 1}
-	paths := scene.Render(eye, center, up, 50, 1, 0.1, 1000, 0) //.01)
+	paths := scene.Render(eye, center, up, 50, 1, 0.1, 1000, 0.1)
 	paths.Render("out.png", 1024)
 	// paths.Print()
 }
