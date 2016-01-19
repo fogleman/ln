@@ -65,28 +65,16 @@ func (c *Cube) Paths() Paths {
 		{{x2, y1, z2}, {x2, y2, z2}},
 		{{x2, y2, z1}, {x2, y2, z2}},
 	}
-	// za := z1 + 0.1
-	// zb := z2 - 0.1
-	// for i := 1; i < 8; i++ {
-	// 	p := float64(i) / 8
-	// 	var x, y float64
-	// 	x = x1 + (x2-x1)*p
-	// 	y = y1 + (y2-y1)*p
-	// 	paths = append(paths, Path{{x, y1, za}, {x, y1, zb}})
-	// 	paths = append(paths, Path{{x, y2, za}, {x, y2, zb}})
-	// 	paths = append(paths, Path{{x1, y, za}, {x1, y, zb}})
-	// 	paths = append(paths, Path{{x2, y, za}, {x2, y, zb}})
-	// }
-	// for i := 1; i < 1; i++ {
-	// 	p := float64(i) / 4
-	// 	ax := x1 + (x2-x1)*p
-	// 	ay := y1 + (y2-y1)*p
-	// 	bx := x2 - (x2-x1)*p
-	// 	by := y2 - (y2-y1)*p
-	// 	paths = append(paths, Path{{ax, ay, z2}, {ax, by, z2}})
-	// 	paths = append(paths, Path{{ax, ay, z2}, {bx, ay, z2}})
-	// 	paths = append(paths, Path{{bx, by, z2}, {ax, by, z2}})
-	// 	paths = append(paths, Path{{bx, by, z2}, {bx, ay, z2}})
-	// }
+	paths = paths[:0]
+	for i := 0; i <= 10; i++ {
+		p := float64(i) / 10
+		var x, y float64
+		x = x1 + (x2-x1)*p
+		y = y1 + (y2-y1)*p
+		paths = append(paths, Path{{x, y1, z1}, {x, y1, z2}})
+		paths = append(paths, Path{{x, y2, z1}, {x, y2, z2}})
+		paths = append(paths, Path{{x1, y, z1}, {x1, y, z2}})
+		paths = append(paths, Path{{x2, y, z1}, {x2, y, z2}})
+	}
 	return paths
 }

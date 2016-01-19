@@ -18,6 +18,9 @@ func main() {
 			fy := float64(y) + dy*0
 			fz := rand.Float64()*3 + 1
 			shape := ln.NewCube(ln.Vector{fx - p, fy - p, 0}, ln.Vector{fx + p, fy + p, fz})
+			if x == 2 && y == 1 {
+				continue
+			}
 			scene.Add(shape)
 		}
 	}
@@ -26,4 +29,5 @@ func main() {
 	up := ln.Vector{0, 0, 1}
 	paths := scene.Render(eye, center, up, 150, 1, 0.1, 100, 0.01)
 	paths.Render("out.png", 1024)
+	paths.Print()
 }
