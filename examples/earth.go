@@ -1,6 +1,9 @@
 package main
 
 import (
+	"fmt"
+	"math"
+
 	"github.com/fogleman/ln/ln"
 	"github.com/jonas-p/go-shp"
 )
@@ -63,16 +66,40 @@ func Render(lines ln.Paths, matrix ln.Matrix) ln.Paths {
 	earth := Earth{sphere, lines}
 	shape := ln.NewTransformedShape(&earth, matrix)
 	scene.Add(shape)
-	eye := ln.LatLngToXYZ(35.7806, -78.6389, 1).Normalize().MulScalar(3.25)
+	eye := ln.LatLngToXYZ(35.7806, -78.6389, 1).Normalize().MulScalar(2.46)
 	center := ln.Vector{}
 	up := ln.Vector{0, 0, 1}
-	return scene.Render(eye, center, up, 45, 1, 0.1, 100, 0.01)
+	return scene.Render(eye, center, up, 60, 1, 0.1, 100, 0.01)
+}
+
+func Circle(r float64) ln.Path {
+	var result ln.Path
+	for i := 0; i <= 360; i++ {
+		a := ln.Radians(float64(i))
+		x := math.Cos(a) * r
+		y := math.Sin(a) * r
+		result = append(result, ln.Vector{x, y, 0})
+	}
+	return result
 }
 
 func main() {
 	lines := LoadPaths()
 	m := ln.Identity()
 	paths := Render(lines, m)
-	paths.Render("earth.png", 1024)
-	paths.Print()
+	paths = append(paths, Circle(0.95))
+	paths = append(paths, Circle(0.953))
+	paths = append(paths, Circle(0.956))
+	paths.Render("earth.png", 256)
+	// paths.Print()
+	for i := 0; i < 360; i += 2 {
+		fmt.Println(i)
+		m := ln.Rotate(ln.Vector{0, 0, 1}, ln.Radians(float64(i)))
+		paths := Render(lines, m)
+		paths = append(paths, Circle(0.95))
+		paths = append(paths, Circle(0.953))
+		paths = append(paths, Circle(0.956))
+		filename := fmt.Sprintf("out%03d.png", i)
+		paths.Render(filename, 256)
+	}
 }
