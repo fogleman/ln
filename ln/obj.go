@@ -2,7 +2,6 @@ package ln
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -18,7 +17,6 @@ func parseIndex(value string, length int) int {
 }
 
 func LoadOBJ(path string) (*Mesh, error) {
-	fmt.Printf("Loading OBJ: %s\n", path)
 	file, err := os.Open(path)
 	if err != nil {
 		return nil, err
