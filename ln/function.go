@@ -23,9 +23,9 @@ func (f *Function) Contains(v Vector, eps float64) bool {
 }
 
 func (f *Function) Intersect(ray Ray) Hit {
-	step := 0.1
+	step := 1.0 / 64
 	sign := f.Test(ray.Position(step))
-	for t := step; t < 100; t += step {
+	for t := step; t < 10; t += step {
 		v := ray.Position(t)
 		if f.Test(v) != sign && f.Box.Contains(v) {
 			return Hit{f, t}
@@ -40,10 +40,11 @@ func (f *Function) Test(v Vector) bool {
 
 func (f *Function) Paths() Paths {
 	var paths Paths
-	step := 0.1
+	step := 1.0 / 16
+	fine := 1.0 / 64
 	for x := f.Box.Min.X; x <= f.Box.Max.X; x += step {
 		var path Path
-		for y := f.Box.Min.Y; y <= f.Box.Max.Y; y += step {
+		for y := f.Box.Min.Y; y <= f.Box.Max.Y; y += fine {
 			z := f.Function(x, y)
 			z = math.Min(z, f.Box.Max.Z)
 			z = math.Max(z, f.Box.Min.Z)
@@ -53,7 +54,7 @@ func (f *Function) Paths() Paths {
 	}
 	for y := f.Box.Min.Y; y <= f.Box.Max.Y; y += step {
 		var path Path
-		for x := f.Box.Min.X; x <= f.Box.Max.X; x += step {
+		for x := f.Box.Min.X; x <= f.Box.Max.X; x += fine {
 			z := f.Function(x, y)
 			z = math.Min(z, f.Box.Max.Z)
 			z = math.Max(z, f.Box.Min.Z)
