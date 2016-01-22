@@ -2,13 +2,21 @@ package ln
 
 import "math"
 
+type Direction int
+
+const (
+	Above Direction = iota
+	Below
+)
+
 type Function struct {
-	Function func(x, y float64) float64
-	Box      Box
+	Function  func(x, y float64) float64
+	Box       Box
+	Direction Direction
 }
 
-func NewFunction(function func(x, y float64) float64, box Box) Shape {
-	return &Function{function, box}
+func NewFunction(function func(x, y float64) float64, box Box, direction Direction) Shape {
+	return &Function{function, box, direction}
 }
 
 func (f *Function) Compile() {
@@ -19,23 +27,23 @@ func (f *Function) BoundingBox() Box {
 }
 
 func (f *Function) Contains(v Vector, eps float64) bool {
-	return false
+	if f.Direction == Below {
+		return v.Z < f.Function(v.X, v.Y)
+	} else {
+		return v.Z > f.Function(v.X, v.Y)
+	}
 }
 
 func (f *Function) Intersect(ray Ray) Hit {
 	step := 1.0 / 64
-	sign := f.Test(ray.Position(step))
+	sign := f.Contains(ray.Position(step), 0)
 	for t := step; t < 10; t += step {
 		v := ray.Position(t)
-		if f.Test(v) != sign && f.Box.Contains(v) {
+		if f.Contains(v, 0) != sign && f.Box.Contains(v) {
 			return Hit{f, t}
 		}
 	}
 	return NoHit
-}
-
-func (f *Function) Test(v Vector) bool {
-	return f.Function(v.X, v.Y) > v.Z
 }
 
 func (f *Function) Paths3() Paths {
@@ -64,7 +72,7 @@ func (f *Function) Paths() Paths {
 			x := math.Cos(Radians(float64(a))) * r
 			y := math.Sin(Radians(float64(a))) * r
 			z := f.Function(x, y)
-			o := -math.Pow(-z, 1.25)
+			o := -math.Pow(-z, 1.4)
 			x = math.Cos(Radians(float64(a))-o) * r
 			y = math.Sin(Radians(float64(a))-o) * r
 			z = math.Min(z, f.Box.Max.Z)
