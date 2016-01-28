@@ -57,8 +57,8 @@ func (p Path) Filter(f Filter) Paths {
 		} else {
 			if len(path) > 1 {
 				result = append(result, path)
-				path = nil
 			}
+			path = nil
 		}
 	}
 	if len(path) > 1 {
