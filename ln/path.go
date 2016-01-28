@@ -49,6 +49,7 @@ func (p Path) Filter(f Filter) Paths {
 	var path Path
 	for _, v := range p {
 		v, ok := f.Filter(v)
+		// ok = ok || i%8 < 4 // show hidden lines
 		if ok {
 			path = append(path, v)
 		} else {

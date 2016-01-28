@@ -47,6 +47,7 @@ func (s *Scene) Render(eye, center, up Vector, width, height, fovy, near, far, s
 		paths = paths.Chop(step)
 	}
 	paths = paths.Filter(&ClipFilter{matrix, eye, s})
-	paths = paths.Transform(Translate(Vector{1, 1, 0}).Scale(Vector{width / 2, height / 2, 0}))
+	matrix = Translate(Vector{1, 1, 0}).Scale(Vector{width / 2, height / 2, 0})
+	paths = paths.Transform(matrix)
 	return paths
 }

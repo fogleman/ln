@@ -168,7 +168,7 @@ func NewOutlineSphere(eye, up, center Vector, radius float64) *OutlineSphere {
 func (s *OutlineSphere) Paths() Paths {
 	var path Path
 	c := s.Sphere.Center
-	r := s.Sphere.Radius + 0.001
+	r := s.Sphere.Radius + 0.005
 	w := c.Sub(s.Eye)
 	u := w.Cross(s.Up).Normalize()
 	v := w.Cross(u).Normalize()

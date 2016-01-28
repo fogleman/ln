@@ -7,10 +7,10 @@ import (
 )
 
 func main() {
-	scene := ln.Scene{}
 	eye := ln.Vector{8, 8, 8}
 	center := ln.Vector{0, 0, 0}
 	up := ln.Vector{0, 0, 1}
+	scene := ln.Scene{}
 	n := 10
 	for x := -n; x <= n; x++ {
 		for y := -n; y <= n; y++ {
@@ -20,6 +20,9 @@ func main() {
 			scene.Add(sphere)
 		}
 	}
-	paths := scene.Render(eye, center, up, 50, 1, 0.1, 100, 0.01)
-	paths.Render("out.png", 1024)
+	width := 1920.0
+	height := 1200.0
+	fovy := 50.0
+	paths := scene.Render(eye, center, up, width, height, fovy, 0.1, 100, 0.01)
+	paths.Render("out.png", width, height, 1)
 }

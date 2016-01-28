@@ -13,12 +13,12 @@ type ClipFilter struct {
 var ClipBox = Box{Vector{-1, -1, -1}, Vector{1, 1, 1}}
 
 func (f *ClipFilter) Filter(v Vector) (Vector, bool) {
+	w := f.Matrix.MulPositionW(v)
 	if !f.Scene.Visible(f.Eye, v) {
-		return v, false
+		return w, false
 	}
-	v = f.Matrix.MulPositionW(v)
-	if !ClipBox.Contains(v) {
-		return v, false
+	if !ClipBox.Contains(w) {
+		return w, false
 	}
-	return v, true
+	return w, true
 }
