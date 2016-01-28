@@ -90,7 +90,7 @@ func main() {
 	paths = append(paths, Circle(0.95))
 	paths = append(paths, Circle(0.953))
 	paths = append(paths, Circle(0.956))
-	paths.Render("earth.png", 256)
+	paths.WriteToPNG("earth.png", 256)
 	// paths.Print()
 	for i := 0; i < 360; i += 2 {
 		fmt.Println(i)
@@ -100,6 +100,6 @@ func main() {
 		paths = append(paths, Circle(0.953))
 		paths = append(paths, Circle(0.956))
 		filename := fmt.Sprintf("out%03d.png", i)
-		paths.Render(filename, 256)
+		paths.WriteToPNG(filename, 256)
 	}
 }

@@ -20,6 +20,6 @@ func render(matrix ln.Matrix) ln.Paths {
 
 func main() {
 	paths := render(ln.Identity())
-	paths.Render("out.png", 1024)
+	paths.WriteToPNG("out.png", 1024)
 	// paths.Print()
 }

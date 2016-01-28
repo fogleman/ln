@@ -2,6 +2,8 @@ package ln
 
 import (
 	"fmt"
+	"io/ioutil"
+	"strings"
 
 	"github.com/ungerik/go-cairo"
 )
@@ -72,6 +74,15 @@ func (p Path) Print() {
 	fmt.Println()
 }
 
+func (p Path) ToSVG() string {
+	var coords []string
+	for _, v := range p {
+		coords = append(coords, fmt.Sprintf("%f,%f", v.X, v.Y))
+	}
+	points := strings.Join(coords, " ")
+	return fmt.Sprintf("<polyline stroke=\"black\" points=\"%s\" />", points)
+}
+
 type Paths []Path
 
 func (p Paths) BoundingBox() Box {
@@ -112,7 +123,7 @@ func (p Paths) Print() {
 	}
 }
 
-func (p Paths) Render(path string, width, height, scale float64) {
+func (p Paths) ToCairo(width, height, scale float64) *cairo.Surface {
 	dc := cairo.NewSurface(cairo.FORMAT_ARGB32, int(width*scale), int(height*scale))
 	dc.SetLineCap(cairo.LINE_CAP_ROUND)
 	dc.SetLineJoin(cairo.LINE_JOIN_ROUND)
@@ -129,5 +140,25 @@ func (p Paths) Render(path string, width, height, scale float64) {
 		}
 	}
 	dc.Stroke()
+	return dc
+}
+
+func (p Paths) WriteToPNG(path string, width, height float64) {
+	dc := p.ToCairo(width, height, 1)
 	dc.WriteToPNG(path)
+}
+
+func (p Paths) ToSVG(width, height float64) string {
+	var lines []string
+	lines = append(lines, fmt.Sprintf("<svg width=\"%f\" height=\"%f\" version=\"1.1\" baseProfile=\"full\" xmlns=\"http://www.w3.org/2000/svg\">", width, height))
+	lines = append(lines, fmt.Sprintf("<g transform=\"translate(0,%f) scale(1,-1)\">", height))
+	for _, path := range p {
+		lines = append(lines, path.ToSVG())
+	}
+	lines = append(lines, "</g></svg>")
+	return strings.Join(lines, "\n")
+}
+
+func (p Paths) WriteToSVG(path string, width, height float64) error {
+	return ioutil.WriteFile(path, []byte(p.ToSVG(width, height)), 0644)
 }

@@ -28,6 +28,6 @@ func main() {
 	center := ln.Vector{0, 0, 0}
 	up := ln.Vector{0, 0, 1}
 	paths := scene.Render(eye, center, up, 150, 1, 0.1, 100, 0.01)
-	paths.Render("out.png", 1024)
+	paths.WriteToPNG("out.png", 1024)
 	paths.Print()
 }
