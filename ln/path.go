@@ -55,16 +55,40 @@ func (p Path) Filter(f Filter) Paths {
 		if ok {
 			path = append(path, v)
 		} else {
-			if len(path) > 0 {
+			if len(path) > 1 {
 				result = append(result, path)
 				path = nil
 			}
 		}
 	}
-	if len(path) > 0 {
+	if len(path) > 1 {
 		result = append(result, path)
 	}
 	return result
+}
+
+func (p Path) Simplify(threshold float64) Path {
+	if len(p) < 3 {
+		return p
+	}
+	a := p[0]
+	b := p[len(p)-1]
+	index := -1
+	distance := 0.0
+	for i := 1; i < len(p)-1; i++ {
+		d := p[i].SegmentDistance(a, b)
+		if d > distance {
+			index = i
+			distance = d
+		}
+	}
+	if distance > threshold {
+		r1 := p[:index+1].Simplify(threshold)
+		r2 := p[index:].Simplify(threshold)
+		return append(r1[:len(r1)-1], r2...)
+	} else {
+		return Path{a, b}
+	}
 }
 
 func (p Path) Print() {
@@ -80,7 +104,7 @@ func (p Path) ToSVG() string {
 		coords = append(coords, fmt.Sprintf("%f,%f", v.X, v.Y))
 	}
 	points := strings.Join(coords, " ")
-	return fmt.Sprintf("<polyline stroke=\"black\" points=\"%s\" />", points)
+	return fmt.Sprintf("<polyline stroke=\"black\" fill=\"none\" points=\"%s\" />", points)
 }
 
 type Paths []Path
@@ -113,6 +137,14 @@ func (p Paths) Filter(f Filter) Paths {
 	var result Paths
 	for _, path := range p {
 		result = append(result, path.Filter(f)...)
+	}
+	return result
+}
+
+func (p Paths) Simplify(threshold float64) Paths {
+	var result Paths
+	for _, path := range p {
+		result = append(result, path.Simplify(threshold))
 	}
 	return result
 }
