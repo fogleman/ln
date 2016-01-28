@@ -1,6 +1,58 @@
-# ln - The 3D Line Art Engine
+# 3D Line Art Renderer
 
-Vector-based 3D.
+`ln` is a vector-based 3D rendering engine written in Go. It is used to produce
+2-dimensional vector graphics depicting 3-dimensional scenes.
+
+## Features
+
+- Primitives
+	- Sphere
+	- Cube
+	- Triangle
+	- Cylinder
+- 3D Functions
+- Triangle Meshes
+	- OBJ & STL
+- Vector-based "Texturing"
+- CSG (Constructive Solid Geometry) Operations
+	- Intersection
+	- Difference
+	- Union
+- Output to PNG or SVG
+
+## How it Works
+
+To understand how `ln` works, it's useful to start with the `Shape` interface:
+
+```go
+type Shape interface {
+	Paths() Paths
+	Intersect(Ray) Hit
+	Contains(Vector, float64) bool
+	BoundingBox() Box
+	Compile()
+}
+```
+
+Each shape must provide some `Paths` which are 3D polylines on the surface
+of the solid. Ultimately anything drawn in the final image is based on these
+paths. These paths can be anything. For a sphere they could be lat/lng grid
+lines, a triangulated-looking surface, dots on the surface, etc. This is what
+we call vector-based texturing.
+
+Each shape must also provide an `Intersect` method that lets the engine test
+for ray-solid intersection. This is how the engine knows what is visible to the
+camera and what is hidden.
+
+All of the `Paths` are chopped up to some granularity and each point is tested
+by shooting a ray toward the camera. If there is no intersection, that point is
+visible. If there is an intersection, it is hidden and will not be rendered.
+
+The visible points are then transformed into 2D space using transformation
+matrices. The result can then be rendered as PNG or SVG.
+
+The `Contains` method is only needed for CSG (Constructive Solid Geometry)
+operations.
 
 ## Hello World: A Single Cube
 
