@@ -28,4 +28,5 @@ func main() {
 	fovy := 30.0
 	paths := scene.Render(eye, center, up, width, height, fovy, 0.1, 100, 0.01)
 	paths.WriteToPNG("out.png", width, height)
+	paths.WriteToSVG("out.svg", width, height)
 }
