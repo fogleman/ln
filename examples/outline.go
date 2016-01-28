@@ -24,5 +24,5 @@ func main() {
 	height := 1200.0
 	fovy := 50.0
 	paths := scene.Render(eye, center, up, width, height, fovy, 0.1, 100, 0.01)
-	paths.WriteToPNG("out.png", width, height, 1)
+	paths.WriteToPNG("out.png", width, height)
 }

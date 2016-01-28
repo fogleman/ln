@@ -33,10 +33,10 @@ func main() {
 	paths := scene.Render(eye, center, up, width, height, fovy, znear, zfar, step)
 
 	// render the paths in an image
-	paths.WriteToPNG("example0.png", width, height)
+	paths.WriteToPNG("out.png", width, height)
 
 	// save the paths as an svg
-	paths.WriteToSVG("example0.svg", width, height)
+	paths.WriteToSVG("out.svg", width, height)
 }
 ```
 
