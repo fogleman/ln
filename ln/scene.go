@@ -33,13 +33,12 @@ func (s *Scene) Paths() Paths {
 	var result Paths
 	for _, shape := range s.Shapes {
 		result = append(result, shape.Paths()...)
-		// box := shape.BoundingBox()
-		// result = append(result, NewCube(box.Min, box.Max).Paths()...)
 	}
 	return result
 }
 
-func (s *Scene) Render(eye, center, up Vector, fovy, aspect, near, far, step float64) Paths {
+func (s *Scene) Render(eye, center, up Vector, width, height, fovy, near, far, step float64) Paths {
+	aspect := width / height
 	s.Compile()
 	paths := s.Paths()
 	matrix := LookAt(eye, center, up)
@@ -48,6 +47,6 @@ func (s *Scene) Render(eye, center, up Vector, fovy, aspect, near, far, step flo
 		paths = paths.Chop(step)
 	}
 	paths = paths.Filter(&ClipFilter{matrix, eye, s})
-	paths = append(paths, Path{{-1, -1, 0}, {1, -1, 0}, {1, 1, 0}, {-1, 1, 0}, {-1, -1, 0}})
+	paths = paths.Transform(Translate(Vector{1, 1, 0}).Scale(Vector{width / 2, height / 2, 0}))
 	return paths
 }

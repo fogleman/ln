@@ -7,7 +7,7 @@ type Cylinder struct {
 	Z0, Z1 float64
 }
 
-func NewCylinder(radius, z0, z1 float64) Shape {
+func NewCylinder(radius, z0, z1 float64) *Cylinder {
 	return &Cylinder{radius, z0, z1}
 }
 

@@ -11,7 +11,7 @@ type Sphere struct {
 	Box    Box
 }
 
-func NewSphere(center Vector, radius float64) Shape {
+func NewSphere(center Vector, radius float64) *Sphere {
 	min := Vector{center.X - radius, center.Y - radius, center.Z - radius}
 	max := Vector{center.X + radius, center.Y + radius, center.Z + radius}
 	box := Box{min, max}
@@ -152,4 +152,32 @@ func LatLngToXYZ(lat, lng, radius float64) Vector {
 	y := radius * math.Cos(lat) * math.Sin(lng)
 	z := radius * math.Sin(lat)
 	return Vector{x, y, z}
+}
+
+type OutlineSphere struct {
+	Sphere
+	Eye Vector
+	Up  Vector
+}
+
+func NewOutlineSphere(eye, up, center Vector, radius float64) *OutlineSphere {
+	sphere := NewSphere(center, radius)
+	return &OutlineSphere{*sphere, eye, up}
+}
+
+func (s *OutlineSphere) Paths() Paths {
+	var path Path
+	c := s.Sphere.Center
+	r := s.Sphere.Radius + 0.001
+	w := c.Sub(s.Eye)
+	u := w.Cross(s.Up).Normalize()
+	v := w.Cross(u).Normalize()
+	for i := 0; i <= 360; i++ {
+		a := Radians(float64(i))
+		p := c
+		p = p.Add(u.MulScalar(math.Cos(a) * r))
+		p = p.Add(v.MulScalar(math.Sin(a) * r))
+		path = append(path, p)
+	}
+	return Paths{path}
 }

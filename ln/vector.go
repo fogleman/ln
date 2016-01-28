@@ -57,6 +57,14 @@ func (a Vector) Div(b Vector) Vector {
 	return Vector{a.X / b.X, a.Y / b.Y, a.Z / b.Z}
 }
 
+func (a Vector) AddScalar(b float64) Vector {
+	return Vector{a.X + b, a.Y + b, a.Z + b}
+}
+
+func (a Vector) SubScalar(b float64) Vector {
+	return Vector{a.X - b, a.Y - b, a.Z - b}
+}
+
 func (a Vector) MulScalar(b float64) Vector {
 	return Vector{a.X * b, a.Y * b, a.Z * b}
 }

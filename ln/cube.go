@@ -8,7 +8,7 @@ type Cube struct {
 	Box Box
 }
 
-func NewCube(min, max Vector) Shape {
+func NewCube(min, max Vector) *Cube {
 	box := Box{min, max}
 	return &Cube{min, max, box}
 }
@@ -65,6 +65,7 @@ func (c *Cube) Paths() Paths {
 		{{x2, y1, z2}, {x2, y2, z2}},
 		{{x2, y2, z1}, {x2, y2, z2}},
 	}
+	return paths
 	paths = paths[:0]
 	for i := 0; i <= 10; i++ {
 		p := float64(i) / 10

@@ -111,28 +111,20 @@ func (p Paths) Print() {
 	}
 }
 
-func (p Paths) Render(path string, scale float64) {
-	pad := 0.0
-	box := p.BoundingBox()
-	dx := box.Max.X - box.Min.X
-	dy := box.Max.Y - box.Min.Y
-	width := int(dx*scale + pad*2)
-	height := int(dy*scale + pad*2)
-	dc := cairo.NewSurface(cairo.FORMAT_ARGB32, width, height)
+func (p Paths) Render(path string, width, height, scale float64) {
+	dc := cairo.NewSurface(cairo.FORMAT_ARGB32, int(width*scale), int(height*scale))
 	dc.SetLineCap(cairo.LINE_CAP_ROUND)
 	dc.SetLineJoin(cairo.LINE_JOIN_ROUND)
 	dc.SetLineWidth(3)
 	dc.Scale(1, -1)
-	dc.Translate(0, float64(-height))
+	dc.Translate(0, -height*scale)
 	dc.SetSourceRGB(1, 1, 1)
 	dc.Paint()
 	dc.SetSourceRGB(0, 0, 0)
 	for _, path := range p {
 		dc.NewSubPath()
 		for _, v := range path {
-			x := pad + (v.X-box.Min.X)*scale
-			y := pad + (v.Y-box.Min.Y)*scale
-			dc.LineTo(x, y)
+			dc.LineTo(v.X*scale, v.Y*scale)
 		}
 	}
 	dc.Stroke()
