@@ -8,12 +8,13 @@ import (
 
 func main() {
 	shape := ln.NewDifference(
-		ln.NewCube(ln.Vector{-1, -1, -1}, ln.Vector{1, 1, 1}),
-		// ln.NewSphere(ln.Vector{}, 1),
-		ln.NewSphere(ln.Vector{-1, -1, -1}, 0.5),
-		ln.NewSphere(ln.Vector{1, 1, 1}, 1.5),
-		ln.NewSphere(ln.Vector{-1, 0, 0}, 0.5),
-		ln.NewSphere(ln.Vector{0, -1, 0}, 0.5),
+		ln.NewIntersection(
+			ln.NewSphere(ln.Vector{}, 1),
+			ln.NewCube(ln.Vector{-0.8, -0.8, -0.8}, ln.Vector{0.8, 0.8, 0.8}),
+		),
+		ln.NewCylinder(0.4, -2, 2),
+		ln.NewTransformedShape(ln.NewCylinder(0.4, -2, 2), ln.Rotate(ln.Vector{1, 0, 0}, ln.Radians(90))),
+		ln.NewTransformedShape(ln.NewCylinder(0.4, -2, 2), ln.Rotate(ln.Vector{0, 1, 0}, ln.Radians(90))),
 	)
 	for i := 0; i < 360; i += 2 {
 		fmt.Println(i)
@@ -25,8 +26,7 @@ func main() {
 		up := ln.Vector{0, 0, 1}
 		width := 1024.0
 		height := 1024.0
-		paths := scene.Render(eye, center, up, width, height, 35, 0.1, 100, 0.01)
+		paths := scene.Render(eye, center, up, width, height, 20, 0.1, 100, 0.01)
 		paths.WriteToPNG(fmt.Sprintf("out%03d.png", i), width, height)
-		break
 	}
 }
