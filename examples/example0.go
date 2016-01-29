@@ -23,9 +23,9 @@ func main() {
 	// compute 2D paths that depict the 3D scene
 	paths := scene.Render(eye, center, up, width, height, fovy, znear, zfar, step)
 
-	// render the paths in an image
+	// save the result as a png
 	paths.WriteToPNG("out.png", width, height)
 
-	// save the paths as an svg
+	// save the result as an svg
 	paths.WriteToSVG("out.svg", width, height)
 }

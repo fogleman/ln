@@ -4,7 +4,7 @@
 (think SVGs) depicting 3D scenes. `ln` is 100% pure Go and has no dependencies
 besides the standard library.
 
-![Examples](http://i.imgur.com/kPodMnG.png)
+![Examples](http://i.imgur.com/HY2Fg2t.png)
 
 ## Features
 
