@@ -38,7 +38,9 @@ func main() {
 	eye := ln.Vector{90, -90, 70}
 	center := ln.Vector{0, 0, -15}
 	up := ln.Vector{0, 0, 1}
-	paths := scene.Render(eye, center, up, 50, 1, 0.1, 1000, 0.1)
-	paths.WriteToPNG("out.png", 1024)
+	width := 1920.0
+	height := 1080.0
+	paths := scene.Render(eye, center, up, width, height, 50, 0.1, 1000, 0.1)
+	paths.WriteToPNG("out.png", width, height)
 	// paths.Print()
 }
