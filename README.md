@@ -1,7 +1,8 @@
-# 3D Line Art Renderer
+# `ln` The 3D Line Art Engine
 
-`ln` is a vector-based 3D rendering engine written in Go. It is used to produce
-2-dimensional vector graphics depicting 3-dimensional scenes.
+`ln` is a vector-based 3D renderer. It is used to produce 2D vector graphics
+(think SVGs) depicting 3D scenes. `ln` is 100% pure Go and has no dependencies
+besides the standard library.
 
 ![Examples](http://i.imgur.com/kPodMnG.png)
 
@@ -12,7 +13,7 @@
 	- Cube
 	- Triangle
 	- Cylinder
-- 3D Functions
+	- 3D Functions
 - Triangle Meshes
 	- OBJ & STL
 - Vector-based "Texturing"
@@ -40,7 +41,9 @@ Each shape must provide some `Paths` which are 3D polylines on the surface
 of the solid. Ultimately anything drawn in the final image is based on these
 paths. These paths can be anything. For a sphere they could be lat/lng grid
 lines, a triangulated-looking surface, dots on the surface, etc. This is what
-we call vector-based texturing.
+we call vector-based texturing. Each built-in `Shape` ships with a default
+`Paths` function (e.g. a `Cube` simply draws the outline of a cube) but you
+can easily provide your own.
 
 Each shape must also provide an `Intersect` method that lets the engine test
 for ray-solid intersection. This is how the engine knows what is visible to the
