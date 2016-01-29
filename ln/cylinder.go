@@ -20,7 +20,11 @@ func (c *Cylinder) BoundingBox() Box {
 }
 
 func (c *Cylinder) Contains(v Vector, f float64) bool {
-	return false
+	xy := Vector{v.X, v.Y, 0}
+	if xy.Length() > c.Radius+f {
+		return false
+	}
+	return v.Z >= c.Z0-f && v.Z <= c.Z1+f
 }
 
 func (shape *Cylinder) Intersect(ray Ray) Hit {
