@@ -100,3 +100,25 @@ func main() {
 ### The Output
 
 ![Cube](http://i.imgur.com/d2dGrOJ.png)
+
+## Constructive Solid Geometry (CSG)
+
+You can easily construct complex solids using Intersection, Difference, Union.
+
+```go
+shape := ln.NewDifference(
+	ln.NewIntersection(
+		ln.NewSphere(ln.Vector{}, 1),
+		ln.NewCube(ln.Vector{-0.8, -0.8, -0.8}, ln.Vector{0.8, 0.8, 0.8}),
+	),
+	ln.NewCylinder(0.4, -2, 2),
+	ln.NewTransformedShape(ln.NewCylinder(0.4, -2, 2), ln.Rotate(ln.Vector{1, 0, 0}, ln.Radians(90))),
+	ln.NewTransformedShape(ln.NewCylinder(0.4, -2, 2), ln.Rotate(ln.Vector{0, 1, 0}, ln.Radians(90))),
+)
+```
+
+This is `(Sphere & Cube) - (Cylinder | Cylinder | Cylinder)`.
+
+Unfortunately, it's difficult to compute the joint formed at the boundaries of these combined shapes, so sufficient texturing is needed on the original solids for a decent result.
+
+![Example](http://i.imgur.com/gk8UtVK.gif)
