@@ -7,6 +7,8 @@ vector graphics (think SVGs) depicting 3D scenes.
 
 ## Dependencies
 
+`ln` uses cairo for rendering.
+
 ### OS X
 
 	brew install cairo pkg-config
