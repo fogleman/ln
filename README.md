@@ -1,10 +1,21 @@
 # `ln` The 3D Line Art Engine
 
-`ln` is a vector-based 3D renderer. It is used to produce 2D vector graphics
-(think SVGs) depicting 3D scenes. `ln` is 100% pure Go and has no dependencies
-besides the standard library.
+`ln` is a vector-based 3D renderer written in Go. It is used to produce 2D
+vector graphics (think SVGs) depicting 3D scenes.
 
 ![Examples](http://i.imgur.com/HY2Fg2t.png)
+
+## Dependencies
+
+### OS X
+
+	brew install cairo pkg-config
+	go get github.com/ungerik/go-cairo
+
+### Ubuntu
+
+	sudo apt-get install libcairo2-dev pkg-config
+	go get github.com/ungerik/go-cairo
 
 ## Features
 
