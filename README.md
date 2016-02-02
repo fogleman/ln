@@ -135,14 +135,15 @@ and override the `Paths()` function.
 ```go
 type StripedCube struct {
 	ln.Cube
+	Stripes int
 }
 
 func (c *StripedCube) Paths() ln.Paths {
 	var paths ln.Paths
 	x1, y1, z1 := c.Min.X, c.Min.Y, c.Min.Z
 	x2, y2, z2 := c.Max.X, c.Max.Y, c.Max.Z
-	for i := 0; i <= 10; i++ {
-		p := float64(i) / 10
+	for i := 0; i <= c.Stripes; i++ {
+		p := float64(i) / float64(c.Stripes)
 		x := x1 + (x2-x1)*p
 		y := y1 + (y2-y1)*p
 		paths = append(paths, ln.Path{{x, y1, z1}, {x, y1, z2}})
@@ -153,6 +154,8 @@ func (c *StripedCube) Paths() ln.Paths {
 	return paths
 }
 ```
+
+Now `StripedCube` instances can be added to the scene.
 
 ## Constructive Solid Geometry (CSG)
 
