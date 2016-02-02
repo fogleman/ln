@@ -3,7 +3,19 @@
 `ln` is a vector-based 3D renderer written in Go. It is used to produce 2D
 vector graphics (think SVGs) depicting 3D scenes.
 
+*The output of an OpenGL pipeline is a rastered image. The output of `ln` is
+a set of 2D vector paths.*
+
 ![Examples](http://i.imgur.com/HY2Fg2t.png)
+
+## Motivation
+
+I created this so I could plot 3D drawings with my
+[Makeblock XY Plotter](http://www.makeblock.cc/xy-plotter-robot-kit/).
+
+Here's one of my drawings from the plotter...
+
+![Example](http://i.imgur.com/NbgpUhQ.jpg)
 
 ## Dependencies
 
