@@ -126,6 +126,34 @@ func main() {
 
 ![Cube](http://i.imgur.com/d2dGrOJ.png)
 
+## Custom Texturing
+
+Suppose we want to draw cubes with vertical stripes on their sides, as
+shown in the skyscrapers example above. We can just define a new type
+and override the `Paths()` function.
+
+```go
+type StripedCube struct {
+	ln.Cube
+}
+
+func (c *StripedCube) Paths() ln.Paths {
+	var paths ln.Paths
+	x1, y1, z1 := c.Min.X, c.Min.Y, c.Min.Z
+	x2, y2, z2 := c.Max.X, c.Max.Y, c.Max.Z
+	for i := 0; i <= 10; i++ {
+		p := float64(i) / 10
+		x := x1 + (x2-x1)*p
+		y := y1 + (y2-y1)*p
+		paths = append(paths, ln.Path{{x, y1, z1}, {x, y1, z2}})
+		paths = append(paths, ln.Path{{x, y2, z1}, {x, y2, z2}})
+		paths = append(paths, ln.Path{{x1, y, z1}, {x1, y, z2}})
+		paths = append(paths, ln.Path{{x2, y, z1}, {x2, y, z2}})
+	}
+	return paths
+}
+```
+
 ## Constructive Solid Geometry (CSG)
 
 You can easily construct complex solids using Intersection, Difference, Union.
