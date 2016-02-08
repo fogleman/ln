@@ -167,11 +167,20 @@ func NewOutlineSphere(eye, up, center Vector, radius float64) *OutlineSphere {
 
 func (s *OutlineSphere) Paths() Paths {
 	var path Path
-	c := s.Sphere.Center
-	r := s.Sphere.Radius + 0.005
-	w := c.Sub(s.Eye)
+	center := s.Sphere.Center
+	radius := s.Sphere.Radius
+
+	hyp := center.Sub(s.Eye).Length()
+	opp := radius
+	theta := math.Asin(opp / hyp)
+	adj := opp / math.Tan(theta)
+	d := math.Cos(theta) * adj
+	r := math.Sin(theta) * adj
+
+	w := center.Sub(s.Eye).Normalize()
 	u := w.Cross(s.Up).Normalize()
 	v := w.Cross(u).Normalize()
+	c := s.Eye.Add(w.MulScalar(d))
 	for i := 0; i <= 360; i++ {
 		a := Radians(float64(i))
 		p := c
