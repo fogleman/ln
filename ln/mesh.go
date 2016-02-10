@@ -1,5 +1,7 @@
 package ln
 
+import "math"
+
 type Mesh struct {
 	Box       Box
 	Triangles []*Triangle
@@ -78,4 +80,28 @@ func (m *Mesh) Transform(matrix Matrix) {
 
 func (m *Mesh) SaveBinarySTL(path string) error {
 	return SaveBinarySTL(path, m)
+}
+
+func (m *Mesh) Voxelize(size float64) []*Cube {
+	z1 := m.Box.Min.Z
+	z2 := m.Box.Max.Z
+	set := make(map[Vector]bool)
+	for z := z1; z <= z2; z += size {
+		plane := Plane{Vector{0, 0, z}, Vector{0, 0, 1}}
+		paths := plane.IntersectMesh(m)
+		for _, path := range paths {
+			for _, v := range path {
+				x := math.Floor(v.X/size+0.5) * size
+				y := math.Floor(v.Y/size+0.5) * size
+				z := math.Floor(v.Z/size+0.5) * size
+				set[Vector{x, y, z}] = true
+			}
+		}
+	}
+	var result []*Cube
+	for v, _ := range set {
+		cube := NewCube(v.SubScalar(size), v.AddScalar(size))
+		result = append(result, cube)
+	}
+	return result
 }

@@ -36,14 +36,15 @@ func (s *Shape) Paths() ln.Paths {
 
 func main() {
 	scene := ln.Scene{}
-	mesh, err := ln.LoadBinarySTL("examples/bowser.stl")
-	// mesh, err := ln.LoadOBJ("../pt/examples/suzanne.obj")
+	mesh, err := ln.LoadBinarySTL("bowser.stl")
+	// mesh, err := ln.LoadOBJ("../pt/examples/bunny.obj")
 	if err != nil {
 		panic(err)
 	}
 	mesh.FitInside(ln.Box{ln.Vector{-1, -1, -1}, ln.Vector{1, 1, 1}}, ln.Vector{0.5, 0.5, 0.5})
 	scene.Add(&Shape{*mesh})
-	eye := ln.Vector{-3, -2, 0}
+	// scene.Add(mesh)
+	eye := ln.Vector{-2, 2, 1}
 	center := ln.Vector{0, 0, 0}
 	up := ln.Vector{0, 0, 1}
 	width := 1024.0 * 2
