@@ -14,6 +14,12 @@ func NewTriangle(v1, v2, v3 Vector) *Triangle {
 	return &t
 }
 
+func (t *Triangle) UpdateBoundingBox() {
+	min := t.V1.Min(t.V2).Min(t.V3)
+	max := t.V1.Max(t.V2).Max(t.V3)
+	t.Box = Box{min, max}
+}
+
 func (t *Triangle) Compile() {
 }
 
@@ -67,10 +73,4 @@ func (t *Triangle) Paths() Paths {
 		{t.V2, t.V3},
 		{t.V3, t.V1},
 	}
-}
-
-func (t *Triangle) UpdateBoundingBox() {
-	min := t.V1.Min(t.V2).Min(t.V3)
-	max := t.V1.Max(t.V2).Max(t.V3)
-	t.Box = Box{min, max}
 }
