@@ -100,7 +100,7 @@ func (m *Mesh) Voxelize(size float64) []*Cube {
 	}
 	var result []*Cube
 	for v, _ := range set {
-		cube := NewCube(v.SubScalar(size), v.AddScalar(size))
+		cube := NewCube(v.SubScalar(size/2), v.AddScalar(size/2))
 		result = append(result, cube)
 	}
 	return result
