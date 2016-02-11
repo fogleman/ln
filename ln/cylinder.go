@@ -65,3 +65,62 @@ func (c *Cylinder) Paths() Paths {
 	}
 	return result
 }
+
+type OutlineCylinder struct {
+	Cylinder
+	Eye Vector
+	Up  Vector
+}
+
+func NewOutlineCylinder(eye, up Vector, radius, z0, z1 float64) *OutlineCylinder {
+	cylinder := NewCylinder(radius, z0, z1)
+	return &OutlineCylinder{*cylinder, eye, up}
+}
+
+func (c *OutlineCylinder) Paths() Paths {
+	center := Vector{0, 0, c.Z0}
+	hyp := center.Sub(c.Eye).Length()
+	opp := c.Radius
+	theta := math.Asin(opp / hyp)
+	adj := opp / math.Tan(theta)
+	d := math.Cos(theta) * adj
+	// r := math.Sin(theta) * adj
+	w := center.Sub(c.Eye).Normalize()
+	u := w.Cross(c.Up).Normalize()
+	c0 := c.Eye.Add(w.MulScalar(d))
+	a0 := c0.Add(u.MulScalar(c.Radius * 1.01))
+	b0 := c0.Add(u.MulScalar(-c.Radius * 1.01))
+
+	center = Vector{0, 0, c.Z1}
+	hyp = center.Sub(c.Eye).Length()
+	opp = c.Radius
+	theta = math.Asin(opp / hyp)
+	adj = opp / math.Tan(theta)
+	d = math.Cos(theta) * adj
+	// r = math.Sin(theta) * adj
+	w = center.Sub(c.Eye).Normalize()
+	u = w.Cross(c.Up).Normalize()
+	c1 := c.Eye.Add(w.MulScalar(d))
+	a1 := c1.Add(u.MulScalar(c.Radius * 1.01))
+	b1 := c1.Add(u.MulScalar(-c.Radius * 1.01))
+
+	var p0, p1 Path
+	for a := 0; a < 360; a++ {
+		x := c.Radius * math.Cos(Radians(float64(a)))
+		y := c.Radius * math.Sin(Radians(float64(a)))
+		p0 = append(p0, Vector{x, y, c.Z0})
+		p1 = append(p1, Vector{x, y, c.Z1})
+	}
+	// d0 := c0.Sub(c.Eye).Normalize()
+	// d1 := Vector{0, 0, c.Z1}.Sub(c.Eye).Normalize()
+	// u0 := d0.Cross(c.Up)
+	// u1 := d1.Cross(c.Up)
+	// a1 := u1.MulScalar(c.Radius)
+	// b1 := u1.MulScalar(-c.Radius)
+	return Paths{
+		p0,
+		p1,
+		{{a0.X, a0.Y, c.Z0}, {a1.X, a1.Y, c.Z1}},
+		{{b0.X, b0.Y, c.Z0}, {b1.X, b1.Y, c.Z1}},
+	}
+}
