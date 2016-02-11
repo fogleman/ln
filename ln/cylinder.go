@@ -111,12 +111,6 @@ func (c *OutlineCylinder) Paths() Paths {
 		p0 = append(p0, Vector{x, y, c.Z0})
 		p1 = append(p1, Vector{x, y, c.Z1})
 	}
-	// d0 := c0.Sub(c.Eye).Normalize()
-	// d1 := Vector{0, 0, c.Z1}.Sub(c.Eye).Normalize()
-	// u0 := d0.Cross(c.Up)
-	// u1 := d1.Cross(c.Up)
-	// a1 := u1.MulScalar(c.Radius)
-	// b1 := u1.MulScalar(-c.Radius)
 	return Paths{
 		p0,
 		p1,

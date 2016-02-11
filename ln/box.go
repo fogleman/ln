@@ -28,6 +28,19 @@ func BoxForTriangles(shapes []*Triangle) Box {
 	return box
 }
 
+func BoxForVectors(vectors []Vector) Box {
+	if len(vectors) == 0 {
+		return Box{}
+	}
+	min := vectors[0]
+	max := vectors[0]
+	for _, v := range vectors {
+		min = min.Min(v)
+		max = max.Max(v)
+	}
+	return Box{min, max}
+}
+
 func (a Box) Anchor(anchor Vector) Vector {
 	return a.Min.Add(a.Size().Mul(anchor))
 }
