@@ -63,7 +63,7 @@ func (shape *Cone) Intersect(ray Ray) Hit {
 
 func (c *Cone) Paths() Paths {
 	var result Paths
-	for a := 0; a < 360; a += 10 {
+	for a := 0; a < 360; a += 30 {
 		x := c.Radius * math.Cos(Radians(float64(a)))
 		y := c.Radius * math.Sin(Radians(float64(a)))
 		result = append(result, Path{{x, y, 0}, {0, 0, c.Height}})
