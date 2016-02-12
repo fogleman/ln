@@ -19,7 +19,7 @@ func (t *Tree) Paths() ln.Paths {
 		c := t.V0.Add(t.V1.Sub(t.V0).MulScalar(p))
 		a := rand.Float64() * 2 * math.Pi
 		l := (1 - p) * 8
-		d := ln.Vector{math.Cos(a), math.Sin(a), -4}.Normalize()
+		d := ln.Vector{math.Cos(a), math.Sin(a), -3}.Normalize()
 		e := c.Add(d.MulScalar(l))
 		paths = append(paths, ln.Path{c, e})
 	}
@@ -28,7 +28,7 @@ func (t *Tree) Paths() ln.Paths {
 
 func main() {
 	eye := ln.Vector{}
-	center := ln.Vector{0.5, 0.5, 4}
+	center := ln.Vector{0.5, 0, 8}
 	up := ln.Vector{0, 0, 1}
 	scene := ln.Scene{}
 	n := 9
@@ -37,9 +37,9 @@ func main() {
 			if x == 0 && y == 0 {
 				continue
 			}
-			z := rand.Float64()*10 + 10
-			xx := float64(x) + (rand.Float64()*2-1)*0.2
-			yy := float64(y) + (rand.Float64()*2-1)*0.2
+			z := rand.Float64()*5 + 15
+			xx := float64(x) + (rand.Float64()*2-1)*0.5
+			yy := float64(y) + (rand.Float64()*2-1)*0.5
 			v0 := ln.Vector{xx, yy, 0}
 			v1 := ln.Vector{xx, yy, z}
 			c := ln.NewTransformedOutlineCone(eye, up, v0, v1, z/64)
