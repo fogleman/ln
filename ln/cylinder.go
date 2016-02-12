@@ -118,3 +118,16 @@ func (c *OutlineCylinder) Paths() Paths {
 		{{b0.X, b0.Y, c.Z0}, {b1.X, b1.Y, c.Z1}},
 	}
 }
+
+func NewTransformedOutlineCylinder(eye, up, v0, v1 Vector, radius float64) Shape {
+	d := v1.Sub(v0)
+	z := d.Length()
+	a := math.Acos(d.Normalize().Dot(up))
+	m := Translate(v0)
+	if a != 0 {
+		u := d.Cross(up).Normalize()
+		m = Rotate(u, a).Translate(v0)
+	}
+	c := NewOutlineCylinder(m.Inverse().MulPosition(eye), up, radius, 0, z)
+	return NewTransformedShape(c, m)
+}
