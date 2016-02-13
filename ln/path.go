@@ -98,6 +98,14 @@ func (p Path) Print() {
 	fmt.Println()
 }
 
+func (p Path) String() string {
+	var parts []string
+	for _, v := range p {
+		parts = append(parts, fmt.Sprintf("%g,%g", v.X, v.Y))
+	}
+	return strings.Join(parts, ";")
+}
+
 func (p Path) ToSVG() string {
 	var coords []string
 	for _, v := range p {
@@ -155,6 +163,14 @@ func (p Paths) Print() {
 	}
 }
 
+func (p Paths) String() string {
+	var parts []string
+	for _, path := range p {
+		parts = append(parts, path.String())
+	}
+	return strings.Join(parts, "\n")
+}
+
 func (p Paths) ToCairo(width, height, scale float64) *cairo.Surface {
 	dc := cairo.NewSurface(cairo.FORMAT_ARGB32, int(width*scale), int(height*scale))
 	dc.SetLineCap(cairo.LINE_CAP_ROUND)
@@ -193,4 +209,8 @@ func (p Paths) ToSVG(width, height float64) string {
 
 func (p Paths) WriteToSVG(path string, width, height float64) error {
 	return ioutil.WriteFile(path, []byte(p.ToSVG(width, height)), 0644)
+}
+
+func (p Paths) WriteToTXT(path string) error {
+	return ioutil.WriteFile(path, []byte(p.String()), 0644)
 }
