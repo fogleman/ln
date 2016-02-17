@@ -2,10 +2,14 @@ package ln
 
 import (
 	"fmt"
+	"image"
+	"image/color"
+	"image/draw"
 	"io/ioutil"
 	"strings"
 
-	"github.com/ungerik/go-cairo"
+	"github.com/llgcode/draw2d"
+	"github.com/llgcode/draw2d/draw2dimg"
 )
 
 type Path []Vector
@@ -171,29 +175,32 @@ func (p Paths) String() string {
 	return strings.Join(parts, "\n")
 }
 
-func (p Paths) ToCairo(width, height, scale float64) *cairo.Surface {
-	dc := cairo.NewSurface(cairo.FORMAT_ARGB32, int(width*scale), int(height*scale))
-	dc.SetLineCap(cairo.LINE_CAP_ROUND)
-	dc.SetLineJoin(cairo.LINE_JOIN_ROUND)
+func (p Paths) ToDraw2D(width, height, scale float64) *image.RGBA {
+	im := image.NewRGBA(image.Rect(0, 0, int(width*scale), int(height*scale)))
+	draw.Draw(im, im.Bounds(), image.White, image.ZP, draw.Src)
+	dc := draw2dimg.NewGraphicContext(im)
+	dc.SetLineCap(draw2d.RoundCap)
+	dc.SetLineJoin(draw2d.RoundJoin)
 	dc.SetLineWidth(3)
 	dc.Scale(1, -1)
 	dc.Translate(0, -height*scale)
-	dc.SetSourceRGB(1, 1, 1)
-	dc.Paint()
-	dc.SetSourceRGB(0, 0, 0)
+	dc.SetStrokeColor(color.RGBA{0, 0, 0, 255})
 	for _, path := range p {
-		dc.NewSubPath()
-		for _, v := range path {
-			dc.LineTo(v.X*scale, v.Y*scale)
+		for i, v := range path {
+			if i == 0 {
+				dc.MoveTo(v.X*scale, v.Y*scale)
+			} else {
+				dc.LineTo(v.X*scale, v.Y*scale)
+			}
 		}
 	}
 	dc.Stroke()
-	return dc
+	return im
 }
 
 func (p Paths) WriteToPNG(path string, width, height float64) {
-	dc := p.ToCairo(width, height, 1)
-	dc.WriteToPNG(path)
+	dc := p.ToDraw2D(width, height, 1)
+	draw2dimg.SaveToPngFile(path, dc)
 }
 
 func (p Paths) ToSVG(width, height float64) string {

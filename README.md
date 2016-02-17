@@ -17,19 +17,12 @@ Here's one of my drawings from the plotter...
 
 ![Example](http://i.imgur.com/NbgpUhQ.jpg)
 
-## Dependencies
+## Installation
 
-`ln` uses cairo for rendering.
+	go get github.com/fogleman/ln
 
-### OS X
-
-	brew install cairo pkg-config
-	go get github.com/ungerik/go-cairo
-
-### Ubuntu
-
-	sudo apt-get install libcairo2-dev pkg-config
-	go get github.com/ungerik/go-cairo
+`ln` uses [draw2d](https://github.com/llgcode/draw2d) for rendering (a pure
+Go library).
 
 ## Features
 
