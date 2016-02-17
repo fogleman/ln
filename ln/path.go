@@ -176,17 +176,15 @@ func (p Paths) String() string {
 }
 
 func (p Paths) ToDraw2D(width, height, scale float64) *image.RGBA {
-	dest := image.NewRGBA(image.Rect(0, 0, int(width*scale), int(height*scale)))
-
-	draw.Draw(dest, dest.Bounds(), image.White, image.ZP, draw.Src)
-
-	dc := draw2dimg.NewGraphicContext(dest)
+	im := image.NewRGBA(image.Rect(0, 0, int(width*scale), int(height*scale)))
+	draw.Draw(im, im.Bounds(), image.White, image.ZP, draw.Src)
+	dc := draw2dimg.NewGraphicContext(im)
 	dc.SetLineCap(draw2d.RoundCap)
 	dc.SetLineJoin(draw2d.RoundJoin)
 	dc.SetLineWidth(3)
 	dc.Scale(1, -1)
 	dc.Translate(0, -height*scale)
-	dc.SetStrokeColor(color.RGBA{0x00, 0x00, 0x00, 0xff})
+	dc.SetStrokeColor(color.RGBA{0, 0, 0, 255})
 	for _, path := range p {
 		for i, v := range path {
 			if i == 0 {
@@ -197,7 +195,7 @@ func (p Paths) ToDraw2D(width, height, scale float64) *image.RGBA {
 		}
 	}
 	dc.Stroke()
-	return dest
+	return im
 }
 
 func (p Paths) WriteToPNG(path string, width, height float64) {
