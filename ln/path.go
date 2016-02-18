@@ -2,14 +2,10 @@ package ln
 
 import (
 	"fmt"
-	"image"
-	"image/color"
-	"image/draw"
 	"io/ioutil"
 	"strings"
 
-	"github.com/llgcode/draw2d"
-	"github.com/llgcode/draw2d/draw2dimg"
+	"github.com/fogleman/dd"
 )
 
 type Path []Vector
@@ -175,32 +171,25 @@ func (p Paths) String() string {
 	return strings.Join(parts, "\n")
 }
 
-func (p Paths) ToDraw2D(width, height, scale float64) *image.RGBA {
-	im := image.NewRGBA(image.Rect(0, 0, int(width*scale), int(height*scale)))
-	draw.Draw(im, im.Bounds(), image.White, image.ZP, draw.Src)
-	dc := draw2dimg.NewGraphicContext(im)
-	dc.SetLineCap(draw2d.RoundCap)
-	dc.SetLineJoin(draw2d.RoundJoin)
+func (p Paths) WriteToPNG(path string, width, height float64) {
+	scale := 1.0
+	w, h := int(width*scale), int(height*scale)
+	dc := dd.NewContext(w, h)
+	dc.SetSourceRGB(1, 1, 1)
+	dc.Paint()
+	dc.SetSourceRGB(0, 0, 0)
 	dc.SetLineWidth(3)
-	dc.Scale(1, -1)
-	dc.Translate(0, -height*scale)
-	dc.SetStrokeColor(color.RGBA{0, 0, 0, 255})
 	for _, path := range p {
 		for i, v := range path {
 			if i == 0 {
-				dc.MoveTo(v.X*scale, v.Y*scale)
+				dc.MoveTo(v.X*scale, float64(h)-v.Y*scale)
 			} else {
-				dc.LineTo(v.X*scale, v.Y*scale)
+				dc.LineTo(v.X*scale, float64(h)-v.Y*scale)
 			}
 		}
 	}
 	dc.Stroke()
-	return im
-}
-
-func (p Paths) WriteToPNG(path string, width, height float64) {
-	dc := p.ToDraw2D(width, height, 1)
-	draw2dimg.SaveToPngFile(path, dc)
+	dc.WriteToPNG(path)
 }
 
 func (p Paths) ToSVG(width, height float64) string {
