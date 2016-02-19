@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"strings"
 
-	"github.com/fogleman/dd"
+	"github.com/fogleman/gg"
 )
 
 type Path []Vector
@@ -174,7 +174,7 @@ func (p Paths) String() string {
 func (p Paths) WriteToPNG(path string, width, height float64) {
 	scale := 1.0
 	w, h := int(width*scale), int(height*scale)
-	dc := dd.NewContext(w, h)
+	dc := gg.NewContext(w, h)
 	dc.SetSourceRGB(1, 1, 1)
 	dc.Paint()
 	dc.SetSourceRGB(0, 0, 0)
