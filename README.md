@@ -21,9 +21,6 @@ Here's one of my drawings from the plotter...
 
 	go get github.com/fogleman/ln
 
-`ln` uses [draw2d](https://github.com/llgcode/draw2d) for rendering (a pure
-Go library).
-
 ## Features
 
 - Primitives
