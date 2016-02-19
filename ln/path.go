@@ -175,9 +175,9 @@ func (p Paths) WriteToPNG(path string, width, height float64) {
 	scale := 1.0
 	w, h := int(width*scale), int(height*scale)
 	dc := gg.NewContext(w, h)
-	dc.SetSourceRGB(1, 1, 1)
-	dc.Paint()
-	dc.SetSourceRGB(0, 0, 0)
+	dc.SetRGB(1, 1, 1)
+	dc.Clear()
+	dc.SetRGB(0, 0, 0)
 	dc.SetLineWidth(3)
 	for _, path := range p {
 		for i, v := range path {
