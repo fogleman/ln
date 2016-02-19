@@ -189,7 +189,7 @@ func (p Paths) WriteToPNG(path string, width, height float64) {
 		}
 	}
 	dc.Stroke()
-	dc.WritePNG(path)
+	dc.SavePNG(path)
 }
 
 func (p Paths) ToSVG(width, height float64) string {
