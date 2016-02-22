@@ -175,18 +175,16 @@ func (p Paths) WriteToPNG(path string, width, height float64) {
 	scale := 1.0
 	w, h := int(width*scale), int(height*scale)
 	dc := gg.NewContext(w, h)
+	dc.InvertY()
 	dc.SetRGB(1, 1, 1)
 	dc.Clear()
 	dc.SetRGB(0, 0, 0)
 	dc.SetLineWidth(3)
 	for _, path := range p {
-		for i, v := range path {
-			if i == 0 {
-				dc.MoveTo(v.X*scale, float64(h)-v.Y*scale)
-			} else {
-				dc.LineTo(v.X*scale, float64(h)-v.Y*scale)
-			}
+		for _, v := range path {
+			dc.LineTo(v.X*scale, v.Y*scale)
 		}
+		dc.NewSubPath()
 	}
 	dc.Stroke()
 	dc.SavePNG(path)
