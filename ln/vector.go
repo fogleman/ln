@@ -9,12 +9,20 @@ type Vector struct {
 	X, Y, Z float64
 }
 
+func SeedRandomWithVector(v *Vector) {
+	rand.Seed(int64(
+		math.Float64bits(v.X) ^
+		math.Float64bits(v.Y) ^
+		math.Float64bits(v.Z) ^
+		uint64(0x7912457717875691) / 4))
+}
+
 func RandomUnitVector() Vector {
 	for {
 		x := rand.Float64()*2 - 1
 		y := rand.Float64()*2 - 1
 		z := rand.Float64()*2 - 1
-		if x*x+y*y+z*z > 1 {
+		if x == 0 && y == 0 && z == 0 {
 			continue
 		}
 		return Vector{x, y, z}.Normalize()
