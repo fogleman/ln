@@ -22,6 +22,9 @@ func RandomUnitVector() Vector {
 		x := rand.Float64()*2 - 1
 		y := rand.Float64()*2 - 1
 		z := rand.Float64()*2 - 1
+		if x*x+y*y+z*z > 1 {
+			continue
+		}
 		if x == 0 && y == 0 && z == 0 {
 			continue
 		}

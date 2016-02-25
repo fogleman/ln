@@ -10,7 +10,7 @@ func function(x, y float64) float64 {
 func main() {
 	scene := ln.Scene{}
 	box := ln.Box{ln.Vector{-2, -2, -4}, ln.Vector{2, 2, 2}}
-	scene.Add(ln.NewGridFunction(function, box, ln.Below))
+	scene.Add(ln.NewFunction(function, box, ln.Below))
 	eye := ln.Vector{3, 0, 3}
 	center := ln.Vector{1.1, 0, 0}
 	up := ln.Vector{0, 0, 1}

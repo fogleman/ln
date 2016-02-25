@@ -13,15 +13,10 @@ type Function struct {
 	Function  func(x, y float64) float64
 	Box       Box
 	Direction Direction
-        PathsImpl func(f* Function) Paths
 }
 
-func NewFunction(function func(x, y float64) float64, box Box, direction Direction, pathsImpl func(f* Function) Paths) Shape {
-	return &Function{function, box, direction, pathsImpl}
-}
-
-func (f *Function) Paths() Paths {
-      return f.PathsImpl(f);
+func NewFunction(function func(x, y float64) float64, box Box, direction Direction) Shape {
+	return &Function{function, box, direction}
 }
 
 func (f *Function) Compile() {
@@ -51,8 +46,15 @@ func (f *Function) Intersect(ray Ray) Hit {
 	return NoHit
 }
 
-// Spiral
-func SpiralPaths(f *Function) Paths {
+type SpiralFunction struct {
+	Function
+}
+
+func NewSpiralFunction(function func(x, y float64) float64, box Box, direction Direction) Shape {
+	return &SpiralFunction{Function{function, box, direction}}
+}
+
+func (f *SpiralFunction) Paths() Paths {
 	var path Path
 	n := 10000
 	for i := 0; i < n; i++ {
@@ -60,7 +62,7 @@ func SpiralPaths(f *Function) Paths {
 		r := 8 - math.Pow(t, 0.1)*8
 		x := math.Cos(Radians(t*2*math.Pi*3000)) * r
 		y := math.Sin(Radians(t*2*math.Pi*3000)) * r
-		z := f.Function(x, y)
+		z := f.Function.Function(x, y)
 		z = math.Min(z, f.Box.Max.Z)
 		z = math.Max(z, f.Box.Min.Z)
 		path = append(path, Vector{x, y, z})
@@ -68,8 +70,15 @@ func SpiralPaths(f *Function) Paths {
 	return Paths{path}
 }
 
-// Radial
-func RadialPaths(f *Function) Paths {
+type RadialFunction struct {
+	Function
+}
+
+func NewRadialFunction(function func(x, y float64) float64, box Box, direction Direction) Shape {
+	return &RadialFunction{Function{function, box, direction}}
+}
+
+func (f *RadialFunction) Paths() Paths {
 	var paths Paths
 	fine := 1.0 / 256
 	for a := 0; a < 360; a += 5 {
@@ -77,7 +86,7 @@ func RadialPaths(f *Function) Paths {
 		for r := 0.0; r <= 8.0; r += fine {
 			x := math.Cos(Radians(float64(a))) * r
 			y := math.Sin(Radians(float64(a))) * r
-			z := f.Function(x, y)
+			z := f.Function.Function(x, y)
 			o := -math.Pow(-z, 1.4)
 			x = math.Cos(Radians(float64(a))-o) * r
 			y = math.Sin(Radians(float64(a))-o) * r
@@ -90,8 +99,8 @@ func RadialPaths(f *Function) Paths {
 	return paths
 }
 
-// Square grid
-func GridPaths(f *Function) Paths {
+// Square grid, default for function base type.
+func (f *Function) Paths() Paths {
 	var paths Paths
 	step := 1.0 / 8
 	fine := 1.0 / 64
@@ -118,8 +127,15 @@ func GridPaths(f *Function) Paths {
 	return paths
 }
 
-// Wavy Spiral
-func WavySpiralPaths(f *Function) Paths {
+type WavySpiralFunction struct {
+	Function
+}
+
+func NewWavySpiralFunction(function func(x, y float64) float64, box Box, direction Direction) Shape {
+	return &WavySpiralFunction{Function{function, box, direction}}
+}
+
+func (f *WavySpiralFunction) Paths() Paths {
 	var path Path
 	n := 50000
 	for i := 0; i < n; i++ {
@@ -139,7 +155,7 @@ func WavySpiralPaths(f *Function) Paths {
 		x := cos * r
 		y := sin * r
 
-		z := f.Function(x, y)
+		z := f.Function.Function(x, y)
 		z = math.Min(z, f.Box.Max.Z)
 		z = math.Max(z, f.Box.Min.Z)
 		path = append(path, Vector{x, y, z})
@@ -147,28 +163,17 @@ func WavySpiralPaths(f *Function) Paths {
 	return Paths{path}
 }
 
-func NewSpiralFunction(function func(x, y float64) float64, box Box, direction Direction) Shape {
-	return NewFunction(function, box, direction, SpiralPaths)
-}
-
-func NewRadialFunction(function func(x, y float64) float64, box Box, direction Direction) Shape {
-	return NewFunction(function, box, direction, RadialPaths)
-}
-
-func NewGridFunction(function func(x, y float64) float64, box Box, direction Direction) Shape {
-	return NewFunction(function, box, direction, GridPaths)
-}
-
-func NewWavySpiralFunction(function func(x, y float64) float64, box Box, direction Direction) Shape {
-	return NewFunction(function, box, direction, WavySpiralPaths)
-}
-
-// Double spirals
-func DoubleSpiralsPaths(f *Function) Paths {
-        return append(SpiralPaths(f), RadialPaths(f)...)
+type DoubleSpiralsFunction struct {
+	SpiralFunction
+	radial RadialFunction
 }
 
 func NewDoubleSpiralsFunction(function func(x, y float64) float64, box Box, direction Direction) Shape {
-	return NewFunction(function, box, direction, DoubleSpiralsPaths)
+	return &DoubleSpiralsFunction{SpiralFunction{Function{function, box, direction}},
+				      RadialFunction{Function{function, box, direction}}}
+}
+
+func (f *DoubleSpiralsFunction) Paths() Paths {
+        return append(f.SpiralFunction.Paths(), f.radial.Paths()...)
 }
 
