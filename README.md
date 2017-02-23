@@ -19,7 +19,7 @@ Here's one of my drawings from the plotter...
 
 ## Installation
 
-	go get github.com/fogleman/ln
+	go get github.com/fogleman/ln/ln
 
 ## Features
 
