@@ -49,8 +49,13 @@ func (s *Sphere) Intersect(r Ray) Hit {
 	return NoHit
 }
 
-func (s *Sphere) Paths4() Paths {
+func seedRandomWithPos(s *Sphere) {
+	SeedRandomWithVector(&s.Center)
+}
+
+func (s *Sphere) RandomCirclesPaths() Paths {
 	var paths Paths
+	seedRandomWithPos(s)
 	var seen []Vector
 	var radii []float64
 	for i := 0; i < 140; i++ {
@@ -94,8 +99,9 @@ func (s *Sphere) Paths4() Paths {
 	return paths
 }
 
-func (s *Sphere) Paths3() Paths {
+func (s *Sphere) RandomDotsPaths() Paths {
 	var paths Paths
+	seedRandomWithPos(s)
 	for i := 0; i < 20000; i++ {
 		v := RandomUnitVector()
 		v = v.MulScalar(s.Radius).Add(s.Center)
@@ -104,13 +110,14 @@ func (s *Sphere) Paths3() Paths {
 	return paths
 }
 
-func (s *Sphere) Paths2() Paths {
+func (s *Sphere) RandomEquatorsPaths() Paths {
 	var equator Path
 	for lng := 0; lng <= 360; lng++ {
 		v := LatLngToXYZ(0, float64(lng), s.Radius)
 		equator = append(equator, v)
 	}
 	var paths Paths
+	seedRandomWithPos(s)
 	for i := 0; i < 100; i++ {
 		m := Identity()
 		for j := 0; j < 3; j++ {
@@ -123,7 +130,34 @@ func (s *Sphere) Paths2() Paths {
 	return paths
 }
 
-func (s *Sphere) Paths() Paths {
+func (s *Sphere) RandomWavyEquatorsPaths() Paths {
+	var equator Path
+	sublng := 10
+	invsublng := 1. / float64(sublng)
+	wave_count := 50.
+	wave_amplitude := 5.
+	for lng10 := 0; lng10 <= 360 * sublng; lng10++ {
+		lng := float64(lng10) * invsublng
+		wave_angle := Radians(lng * wave_count)
+		wave := math.Cos(wave_angle) * wave_amplitude
+		v := LatLngToXYZ(wave, lng, s.Radius)
+		equator = append(equator, v)
+	}
+	var paths Paths
+	seedRandomWithPos(s)
+	for i := 0; i < 10; i++ {
+		m := Identity()
+		for j := 0; j < 3; j++ {
+			v := RandomUnitVector()
+			m = m.Rotate(v, rand.Float64()*2*math.Pi)
+		}
+		m = m.Translate(s.Center)
+		paths = append(paths, equator.Transform(m))
+	}
+	return paths
+}
+
+func (s *Sphere) LonLatPaths() Paths {
 	var paths Paths
 	n := 10
 	o := 10
@@ -145,6 +179,11 @@ func (s *Sphere) Paths() Paths {
 	}
 	return paths
 }
+
+func (s *Sphere) Paths() Paths {
+   return s.RandomWavyEquatorsPaths()
+}
+
 
 func LatLngToXYZ(lat, lng, radius float64) Vector {
 	lat, lng = Radians(lat), Radians(lng)

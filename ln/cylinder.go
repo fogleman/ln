@@ -39,20 +39,44 @@ func (shape *Cylinder) Intersect(ray Ray) Hit {
 		return NoHit
 	}
 	s := math.Sqrt(q)
+        t := 1e30
 	t0 := (-b + s) / (2 * a)
+	if 1e-6 < t0 && t0 < t {
+           z := o.Z + t0*d.Z
+           if shape.Z0 < z && z < shape.Z1 {
+		t = t0
+           }
+	}
 	t1 := (-b - s) / (2 * a)
-	if t0 > t1 {
-		t0, t1 = t1, t0
+	if 1e-6 < t1 && t1 < t {
+           z := o.Z + t1*d.Z
+           if shape.Z0 < z && z < shape.Z1 {
+		t = t1
+           }
 	}
-	z0 := o.Z + t0*d.Z
-	z1 := o.Z + t1*d.Z
-	if t0 > 1e-6 && shape.Z0 < z0 && z0 < shape.Z1 {
-		return Hit{shape, t0}
-	}
-	if t1 > 1e-6 && shape.Z0 < z1 && z1 < shape.Z1 {
-		return Hit{shape, t1}
-	}
-	return NoHit
+        if d.Z != 0 {
+            t3 := (shape.Z0 - o.Z) / d.Z
+            if 1e-6 < t3  && t3 < t {
+                z := o.Add(d.MulScalar(t3))
+                z.Z = 0
+                if z.LengthSquared() < r * r {
+                    t = t3
+                }
+            }
+            t4 := (shape.Z1 - o.Z) / d.Z
+            if 1e-6 < t4 && t4 < t {
+                z := o.Add(d.MulScalar(t4))
+                z.Z = 0
+                if z.LengthSquared() < r * r {
+                    t = t4
+                }
+            }
+        }
+        if t < 1e30 {
+		return Hit{shape, t}
+	} else {
+                return NoHit
+        }
 
 }
 
