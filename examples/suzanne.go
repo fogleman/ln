@@ -4,7 +4,7 @@ import "github.com/fogleman/ln/ln"
 
 func main() {
 	scene := ln.Scene{}
-	mesh, err := ln.LoadOBJ("examples/suzanne.obj")
+	mesh, err := ln.LoadOBJ("suzanne.obj")
 	if err != nil {
 		panic(err)
 	}
